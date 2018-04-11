@@ -135,10 +135,10 @@
   </header>
 
   <section class="post">
-    <p>项目日渐庞大，代码越来越烦杂，性能问题也越来越多，准备搞一次系统性的优化。<br>随着加载项的越来越多，app启动时感觉有很明显的卡顿现象。<br>要做优化，先得分析APP是如何完成一次启动的，<a href="https://techblog.toutiao.com/2017/01/17/iosspeed/" target="_blank" rel="external">头条的这篇文章</a>说明了</p>
+    <p>项目日渐庞大，代码越来越烦杂，性能问题也越来越多，准备搞一次系统性的优化。<br>随着加载项的越来越多，app启动时感觉有很明显的卡顿现象。<br>要做优化，先得分析APP是如何完成一次启动的</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">t(App总启动时间) = t1(main()之前的加载时间) + t2(main()之后的加载时间)。</div></pre></td></tr></table></figure>
 <p>So,我们先分析下main()加载之前的过程。</p>
-<p>在<code>target</code>中添加一个<code>value</code>为1的<code>DYLD_PRINT_STATISTICS</code>环境变量。<br><img src="media/15227359351082/15227369152532.jpg" alt=""><br>run一哈，控制台输出</p>
+<p>在<code>target</code>中添加一个<code>value</code>为1的<code>DYLD_PRINT_STATISTICS</code>环境变量。<br><img src="http://p70kuv276.bkt.clouddn.com/15227369152532.jpg" alt=""><br>run一哈，控制台输出</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">Total pre-main time: 532.27 milliseconds (100.0%)</div><div class="line">         dylib loading time: 156.04 milliseconds (29.3%)</div><div class="line">        rebase/binding time:  74.47 milliseconds (13.9%)</div><div class="line">            ObjC setup time: 155.44 milliseconds (29.2%)</div><div class="line">           initializer time: 146.19 milliseconds (27.4%)</div><div class="line">           slowest intializers :</div><div class="line">             libSystem.B.dylib :  15.71 milliseconds (2.9%)</div><div class="line">    libMainThreadChecker.dylib :  18.48 milliseconds (3.4%)</div></pre></td></tr></table></figure>
 <p>word妈耶!!! 在<code>main()</code>执行之前居然就用了532.27ms（需以冷启动的耗时为基准）。</p>
 <p>从日志上可以看到大致的过程：</p>
@@ -148,8 +148,8 @@
 <p>那么在<code>pre-main()</code>这一步我们都能做些什么优化工作？</p>
 <p><strong>加载dylib</strong><br>在这一步我们能优化的不多，无非是减少一些动态库的依赖。</p>
 <p><strong>Rebase &amp;&amp; Bind</strong><br>因为ASLR的存在，可执行文件在虚拟内存中的地址每次启动都是不同的，所以需要根据偏移量来计算正确的地址。这一步可以优化的点是移除不用的类和减少Catagory和selector的数量。</p>
-<p>可以使用<a href="https://github.com/dblock/fui" target="_blank" rel="external">FUI</a>来寻找没有使用到的类，也可以使用<a href="https://www.jetbrains.com/objc/" target="_blank" rel="external">AppCode</a>来寻找，这里推荐使用<code>AppCode</code>，能相对安全的移除无效引用和方法等。当然，命中之后也得小心移除，以免出现意外。<br><img src="media/15227359351082/15227408863124.jpg" alt=""><br>上图为未优化前执行结果</p>
-<p><img src="media/15227359351082/15233282896424.jpg" alt=""><br>上图为优化之后执行结果<br>经过一系列瞎比操作之后，删除了一些不必要的第三方库，大概移除了70+的无效类，900+无效方法，有些意外的是未使用的属性反而增加了。<code>pre-main</code>大概优化到了<code>330ms</code>左右，虽然优化到了推荐的<code>400ms</code>以内，但还是差强人意，待继续优化。</p>
+<p>可以使用<a href="https://github.com/dblock/fui" target="_blank" rel="external">FUI</a>来寻找没有使用到的类，也可以使用<a href="https://www.jetbrains.com/objc/" target="_blank" rel="external">AppCode</a>来寻找，这里推荐使用<code>AppCode</code>，能相对安全的移除无效引用和方法等。当然，命中之后也得小心移除，以免出现意外。<br><img src="http://p70kuv276.bkt.clouddn.com/15227408863124.jpg" alt=""><br>上图为未优化前执行结果</p>
+<p><img src="http://p70kuv276.bkt.clouddn.com/15233282896424.jpg" alt=""><br>上图为优化之后执行结果<br>经过一系列瞎比操作之后，删除了一些不必要的第三方库，大概移除了70+的无效类，900+无效方法，有些意外的是未使用的属性反而增加了。<code>pre-main</code>大概优化到了<code>330ms</code>左右，虽然优化到了推荐的<code>400ms</code>以内，但还是差强人意，待继续优化。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">Total pre-main time: 329.34 milliseconds (100.0%)</div><div class="line">         dylib loading time:  90.18 milliseconds (27.3%)</div><div class="line">        rebase/binding time:  58.19 milliseconds (17.6%)</div><div class="line">            ObjC setup time:  56.01 milliseconds (17.0%)</div><div class="line">           initializer time: 124.79 milliseconds (37.8%)</div><div class="line">           slowest intializers :</div><div class="line">             libSystem.B.dylib :  20.23 milliseconds (6.1%)</div><div class="line">   libBacktraceRecording.dylib :  10.15 milliseconds (3.0%)</div><div class="line">    libMainThreadChecker.dylib :  33.22 milliseconds (10.0%)</div></pre></td></tr></table></figure>
 <p><strong>初始化Objective C</strong><br>上一步优化完之后这里也就没啥可做的了</p>
 <p><strong>其它的初始化代码</strong><br>这一步开始动态调整<br>使用+initialize替换+load,从而加快所有类文件的加载速度.</p>

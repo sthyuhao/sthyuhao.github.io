@@ -150,9 +150,9 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&lt;key&gt;Description&lt;/key&gt;</div><div class="line">&lt;string&gt;Apple LLVM 8.0 compiler&lt;/string&gt; -&gt; &lt;string&gt;Obfuscator 4.0 compiler&lt;/string&gt;</div><div class="line">&lt;key&gt;Name&lt;/key&gt;</div><div class="line">&lt;string&gt;Apple LLVM 8.0&lt;/string&gt; -&gt; &lt;string&gt;Obfuscator 4.0&lt;/string&gt;</div><div class="line">&lt;key&gt;Vendor&lt;/key&gt;</div><div class="line">&lt;string&gt;Apple&lt;/string&gt; -&gt; &lt;string&gt;HEIG-VD&lt;/string&gt;</div><div class="line">&lt;key&gt;Version&lt;/key&gt;</div><div class="line">&lt;string&gt;7.0&lt;/string&gt; -&gt; &lt;string&gt;4.0&lt;/string&gt;</div></pre></td></tr></table></figure>
 <p>然后：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sudo plutil -convert binary1 Obfuscator\ 3.4.strings</div></pre></td></tr></table></figure>
-<p>完成以上操作后重启Xcode，然后随便打开一个project，在Build Settings中更换新的编译器：<br><img src="media/15017511329462/15058024520504.jpg" alt=""></p>
+<p>完成以上操作后重启Xcode，然后随便打开一个project，在Build Settings中更换新的编译器：<br><img src="http://p70kuv276.bkt.clouddn.com/15058024520504.jpg" alt=""></p>
 <p>将默认的编译器选项更换成Obfuscator 4.0(当然，根据你们git-clone下来的版本为准)。</p>
-<p>然后<br>我们可以添加你想要的混淆方式的标志<br><img src="media/15017511329462/15058026482988.jpg" alt=""></p>
+<p>然后<br>我们可以添加你想要的混淆方式的标志<br><img src="http://p70kuv276.bkt.clouddn.com/15058026482988.jpg" alt=""></p>
 <p>目前O-LLVM提供的方式有三种，分别是<br>指令替换 <code>-mllvm -sub</code><br>控制流伪造 <code>-mllvm -bcf</code><br>控制流平展 <code>-mllvm -fla</code></p>
 <p>具体的替换模式请查阅<a href="https://github.com/obfuscator-llvm/obfuscator/wiki" target="_blank" rel="external">官方WIKI</a></p>
 
@@ -168,8 +168,9 @@
                 <h2 class="post-list__post-title post-title"><a href="/2018/04/13/15227359351082/" title="记录一次APP启动优化">记录一次APP启动优化</a></h2>
                 <p class="excerpt">
                 
-                项目日渐庞大，代码越来越烦杂，性能问题也越来越多，准备搞一次系统性的优化。随着加载项的越来越多，app启动时感觉有很明显的卡顿现象。要做优化，先得分析APP是如何完成一次启动的，头条的这篇文章说明了
-1t(App总启动时间) = t1(main()之前的加载时间) + t2(main()之后的加载时
+                项目日渐庞大，代码越来越烦杂，性能问题也越来越多，准备搞一次系统性的优化。随着加载项的越来越多，app启动时感觉有很明显的卡顿现象。要做优化，先得分析APP是如何完成一次启动的
+1t(App总启动时间) = t1(main()之前的加载时间) + t2(main()之后的加载时间)。
+So,我们先分
                 &hellip;
                 </p>
                 <div class="post-list__meta"><time datetime="2018-04-13T06:12:22.000Z" class="post-list__meta--date date">2018-04-13</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;

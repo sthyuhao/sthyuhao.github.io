@@ -128,10 +128,10 @@
       <h2 class="post-list__post-title post-title"><a href="/2018/04/13/15227359351082/" title="link to post.title">记录一次APP启动优化</a></h2>
       <p class="excerpt">
     
-      项目日渐庞大，代码越来越烦杂，性能问题也越来越多，准备搞一次系统性的优化。随着加载项的越来越多，app启动时感觉有很明显的卡顿现象。要做优化，先得分析APP是如何完成一次启动的，头条的这篇文章说明了
+      项目日渐庞大，代码越来越烦杂，性能问题也越来越多，准备搞一次系统性的优化。随着加载项的越来越多，app启动时感觉有很明显的卡顿现象。要做优化，先得分析APP是如何完成一次启动的
 1t(App总启动时间) = t1(main()之前的加载时间) + t2(main()之后的加载时间)。
 So,我们先分析下main()加载之前的过程。
-在target中添加一个value为1的DY
+在target中添加一个value为1的DYLD_PRINT_ST
     &hellip;
       </p>
       <div class="post-list__meta"><time datetime="2018-04-13T06:12:22.000Z" class="post-list__meta--date date">2018-04-13</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;
