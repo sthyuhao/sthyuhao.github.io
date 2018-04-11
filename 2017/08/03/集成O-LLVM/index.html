@@ -35,7 +35,7 @@
     <meta name="generator" content="hexo"/>
     
 
-    <link rel="canonical" href="http://yoursite.com/2017/02/18/FirstNight/"/>
+    <link rel="canonical" href="http://yoursite.com/2017/08/03/集成O-LLVM/"/>
 
     
       
@@ -123,7 +123,7 @@
 
   <header class="post-header">
     <div class="post-meta">
-      <time datetime="2017-02-18T08:19:21.000Z" class="post-list__meta--date date">2017-02-18</time> &#8226; <span class="post-meta__tags tags">于&nbsp; </span>
+      <time datetime="2017-08-03T09:05:32.000Z" class="post-list__meta--date date">2017-08-03</time> &#8226; <span class="post-meta__tags tags">于&nbsp; </span>
       <span class="page-pv">
       &nbsp;阅读&nbsp;<span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span>
       </span> 
@@ -133,10 +133,28 @@
   </header>
 
   <section class="post">
-    <hr>
-<h2 id="title-First-Night"><a href="#title-First-Night" class="headerlink" title=" title: First Night"></a> title: First Night</h2><blockquote>
-<p>我有一头<strong>小毛驴</strong>，可是我从来都不骑。</p>
-</blockquote>
+    <h1 id="Xcode集成O-LLVM"><a href="#Xcode集成O-LLVM" class="headerlink" title="Xcode集成O-LLVM"></a>Xcode集成O-LLVM</h1><p>要在Xcode中使用O-LLVM，必须要编写一个Xcode插件。</p>
+<p>首先</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ cd /Applications/Xcode.app/Contents/PlugIns/Xcode3Core.ideplugin/Contents/SharedSupport/Developer/Library/Xcode/Plug-ins/</div><div class="line">$ sudo cp -r Clang\ LLVM\ 1.0.xcplugin/ Obfuscator.xcplugin</div><div class="line">$ cd Obfuscator.xcplugin/Contents/</div><div class="line">$ sudo plutil -convert xml1 Info.plist</div><div class="line">$ sudo vim Info.plist</div></pre></td></tr></table></figure>
+<p>更改</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&lt;string&gt;com.apple.compilers.clang&lt;/string&gt; -&gt; &lt;string&gt;com.apple.compilers.obfuscator&lt;/string&gt;</div><div class="line">&lt;string&gt;Clang LLVM 1.0 Compiler Xcode Plug-in&lt;/string&gt; -&gt; &lt;string&gt;Obfuscator Xcode Plug-in&lt;/string&gt;</div></pre></td></tr></table></figure>
+<p>不懂vim操作的同学请自行百度。</p>
+<p>然后：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ sudo plutil -convert binary1 Info.plist</div><div class="line">$ cd Resources/</div><div class="line">$ sudo mv Clang\ LLVM\ 1.0.xcspec Obfuscator.xcspec</div><div class="line">$ sudo vim Obfuscator.xcspec</div></pre></td></tr></table></figure>
+<p>更改：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&lt;key&gt;Description&lt;/key&gt;</div><div class="line">&lt;string&gt;Apple LLVM 8.0 compiler&lt;/string&gt; -&gt; &lt;string&gt;Obfuscator 4.0 compiler&lt;/string&gt;</div><div class="line">&lt;key&gt;ExecPath&lt;/key&gt;</div><div class="line">&lt;string&gt;clang&lt;/string&gt; -&gt; &lt;string&gt;/path/to/obfuscator_bin/clang&lt;/string&gt;</div><div class="line">&lt;key&gt;Identifier&lt;/key&gt;</div><div class="line">&lt;string&gt;com.apple.compilers.llvm.clang.1_0&lt;/string&gt; -&gt; &lt;string&gt;com.apple.compilers.llvm.obfuscator.4_0&lt;/string&gt;</div><div class="line">&lt;key&gt;Name&lt;/key&gt;</div><div class="line">&lt;string&gt;Apple LLVM 8.0&lt;/string&gt; -&gt; &lt;string&gt;Obfuscator 4.0&lt;/string&gt;</div><div class="line">&lt;key&gt;Vendor&lt;/key&gt;</div><div class="line">&lt;string&gt;Apple&lt;/string&gt; -&gt; &lt;string&gt;HEIG-VD&lt;/string&gt;</div><div class="line">&lt;key&gt;Version&lt;/key&gt;</div><div class="line">&lt;string&gt;7.0&lt;/string&gt; -&gt; &lt;string&gt;4.0&lt;/string&gt;</div></pre></td></tr></table></figure>
+<p>然后：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ cd English.lproj/</div><div class="line">$ sudo mv Apple\ LLVM\ 5.1.strings &quot;Obfuscator 3.4.strings&quot;</div><div class="line">$ sudo plutil -convert xml1 Obfuscator\ 3.4.strings</div><div class="line">$ sudo vim Obfuscator\ 3.4.strings</div></pre></td></tr></table></figure>
+<p>更改：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&lt;key&gt;Description&lt;/key&gt;</div><div class="line">&lt;string&gt;Apple LLVM 8.0 compiler&lt;/string&gt; -&gt; &lt;string&gt;Obfuscator 4.0 compiler&lt;/string&gt;</div><div class="line">&lt;key&gt;Name&lt;/key&gt;</div><div class="line">&lt;string&gt;Apple LLVM 8.0&lt;/string&gt; -&gt; &lt;string&gt;Obfuscator 4.0&lt;/string&gt;</div><div class="line">&lt;key&gt;Vendor&lt;/key&gt;</div><div class="line">&lt;string&gt;Apple&lt;/string&gt; -&gt; &lt;string&gt;HEIG-VD&lt;/string&gt;</div><div class="line">&lt;key&gt;Version&lt;/key&gt;</div><div class="line">&lt;string&gt;7.0&lt;/string&gt; -&gt; &lt;string&gt;4.0&lt;/string&gt;</div></pre></td></tr></table></figure>
+<p>然后：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sudo plutil -convert binary1 Obfuscator\ 3.4.strings</div></pre></td></tr></table></figure>
+<p>完成以上操作后重启Xcode，然后随便打开一个project，在Build Settings中更换新的编译器：<br><img src="media/15017511329462/15058024520504.jpg" alt=""></p>
+<p>将默认的编译器选项更换成Obfuscator 4.0(当然，根据你们git-clone下来的版本为准)。</p>
+<p>然后<br>我们可以添加你想要的混淆方式的标志<br><img src="media/15017511329462/15058026482988.jpg" alt=""></p>
+<p>目前O-LLVM提供的方式有三种，分别是<br>指令替换 <figure class="highlight plain"><figcaption><span>-sub```</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">控制流伪造 ```-mllvm -bcf</div></pre></td></tr></table></figure></p>
+<p>控制流平展 <code>-mllvm -fla</code></p>
+<p>具体的替换模式请查阅<a href="https://github.com/obfuscator-llvm/obfuscator/wiki" target="_blank" rel="external">官方WIKI</a></p>
 
   </section>
 
@@ -144,9 +162,11 @@
 <section class="read-more">
            
     
+        
+        
                
             <div class="read-more-item">
-                <span class="read-more-item-dim">最近的文章</span>
+                <span class="read-more-item-dim">更早的文章</span>
                 <h2 class="post-list__post-title post-title"><a href="/2017/05/15/LLVM与Clang的一些事儿/" title=""></a></h2>
                 <p class="excerpt">
                 
@@ -154,10 +174,8 @@
                 &hellip;
                 </p>
                 <div class="post-list__meta"><time datetime="2017-05-15T08:55:52.000Z" class="post-list__meta--date date">2017-05-15</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2017/05/15/LLVM与Clang的一些事儿/">继续阅读</a></div>
-                           
+                       
             </div>
-        
-        
         
      
    
@@ -168,7 +186,7 @@
             
 <section class="post-comments">
 <!-- 多说评论框 start -->
-  <div class="ds-thread" data-thread-key="http://yoursite.com/2017/02/18/FirstNight/" data-title="" data-url="http://yoursite.com/2017/02/18/FirstNight/"></div>
+  <div class="ds-thread" data-thread-key="http://yoursite.com/2017/08/03/集成O-LLVM/" data-title="" data-url="http://yoursite.com/2017/08/03/集成O-LLVM/"></div>
   <!-- 多说评论框 end -->
   <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
   <script type="text/javascript">
