@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    
+    <title>记录一次APP启动优化 | 余生</title>
+    <meta name="renderer" content="webkit">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="我是如来佛祖玉皇大帝观音菩萨指定取西经特派使者花果山水帘洞美猴王齐天大圣孙悟空，帅的掉渣！">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="记录一次APP启动优化 | 余生">
+    <meta name="twitter:description" content="我是如来佛祖玉皇大帝观音菩萨指定取西经特派使者花果山水帘洞美猴王齐天大圣孙悟空，帅的掉渣！">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="记录一次APP启动优化 | 余生">
+    <meta property="og:description" content="我是如来佛祖玉皇大帝观音菩萨指定取西经特派使者花果山水帘洞美猴王齐天大圣孙悟空，帅的掉渣！">
+
+    
+    <meta name="author" content="眯大帅">
+    
+    <link rel="stylesheet" href="/css/vno.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+
+    
+    <link rel="icon" href="/images/avatar-small.png">
+    
+
+    <meta name="generator" content="hexo"/>
+    
+
+    <link rel="canonical" href="http://yoursite.com/2018/04/13/15227359351082/"/>
+
+    
+      
+</head>
+
+<body class="home-template no-js">
+    <script src="//cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
+    <script src="/js/main.js"></script>
+    <span class="mobile btn-mobile-menu">
+        <i class="fa fa-list btn-mobile-menu__icon"></i>
+        <i class="fa fa-angle-up btn-mobile-close__icon hidden"></i>
+    </span>
+
+    
+<header class="panel-cover panel-cover--collapsed" style="background-image: url(/images/background-cover.jpg)">
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+
+        <a href="/" title="前往 余生 的主页"><img src="/images/avatar.jpg" width="80" alt="余生 logo" class="panel-cover__logo logo" /></a>
+        <h1 class="panel-cover__title panel-title"><a href="/" title="link to homepage for 余生">余生</a></h1>
+        
+        <hr class="panel-cover__divider" />
+        <p class="panel-cover__description">简书：http://www.jianshu.com/u/bdf4a5f600a3</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary" />
+
+        <div class="navigation-wrapper">
+          <div>
+          <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item"><a href="/#blog" title="访问博客" class="blog-button">博客</a></li>
+            
+            </ul>
+          </nav>
+          </div>
+          <div>
+          <nav class="cover-navigation navigation--social">
+  <ul class="navigation">
+
+  <!-- Weibo-->
+  
+
+  <!-- Github -->
+  
+  <li class="navigation__item">
+    <a href="https://github.com/sthyuhao" title="查看我的GitHub主页" target="_blank">
+      <i class='social fa fa-github'></i>
+      <span class="label">Github</span>
+    </a>
+  </li>
+
+
+<!-- Stack Overflow -->
+        
+
+  <!-- Google Plus -->
+  
+
+<!-- Facebook -->
+
+  
+<!-- Twitter -->
+
+  
+
+
+
+  </ul>
+</nav>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="panel-cover--overlay cover-purple"></div>
+  </div>
+</header>
+
+    <div class="content-wrapper">
+        <div class="content-wrapper__inner">
+            <article class="post-container post-container--single">
+
+  <header class="post-header">
+    <div class="post-meta">
+      <time datetime="2018-04-13T06:12:22.000Z" class="post-list__meta--date date">2018-04-13</time> &#8226; <span class="post-meta__tags tags">于&nbsp;
+  <a class="tag-link" href="/tags/优化/">优化</a>
+ </span>
+      <span class="page-pv">
+      &nbsp;阅读&nbsp;<span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span>
+      </span> 
+   
+    </div>
+    <h1 class="post-title">记录一次APP启动优化</h1>
+  </header>
+
+  <section class="post">
+    <p>项目日渐庞大，代码越来越烦杂，性能问题也越来越多，准备搞一次系统性的优化。<br>随着加载项的越来越多，app启动时感觉有很明显的卡顿现象。<br>要做优化，先得分析APP是如何完成一次启动的，<a href="https://techblog.toutiao.com/2017/01/17/iosspeed/" target="_blank" rel="external">头条的这篇文章</a>说明了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">t(App总启动时间) = t1(main()之前的加载时间) + t2(main()之后的加载时间)。</div></pre></td></tr></table></figure>
+<p>So,我们先分析下main()加载之前的过程。</p>
+<p>在<code>target</code>中添加一个<code>value</code>为1的<code>DYLD_PRINT_STATISTICS</code>环境变量。<br><img src="media/15227359351082/15227369152532.jpg" alt=""><br>run一哈，控制台输出</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">Total pre-main time: 532.27 milliseconds (100.0%)</div><div class="line">         dylib loading time: 156.04 milliseconds (29.3%)</div><div class="line">        rebase/binding time:  74.47 milliseconds (13.9%)</div><div class="line">            ObjC setup time: 155.44 milliseconds (29.2%)</div><div class="line">           initializer time: 146.19 milliseconds (27.4%)</div><div class="line">           slowest intializers :</div><div class="line">             libSystem.B.dylib :  15.71 milliseconds (2.9%)</div><div class="line">    libMainThreadChecker.dylib :  18.48 milliseconds (3.4%)</div></pre></td></tr></table></figure>
+<p>word妈耶!!! 在<code>main()</code>执行之前居然就用了532.27ms（需以冷启动的耗时为基准）。</p>
+<p>从日志上可以看到大致的过程：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">加载dylib</div><div class="line">Rebase &amp;&amp; Bind （ASLR指针地址偏移，Rebase修正内部指针指向，Bind修正外部指针指向）</div><div class="line">初始化Objective C</div><div class="line">其它的初始化代码</div></pre></td></tr></table></figure>
+<p>根据以上过程能得出影响<code>pre-main()</code>耗时的主要因素如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">* 动态库加载越多，启动越慢。</div><div class="line">* ObjC类越多，启动越慢</div><div class="line">* +load越多，启动越慢</div></pre></td></tr></table></figure>
+<p>那么在<code>pre-main()</code>这一步我们都能做些什么优化工作？</p>
+<p><strong>加载dylib</strong><br>在这一步我们能优化的不多，无非是减少一些动态库的依赖。</p>
+<p><strong>Rebase &amp;&amp; Bind</strong><br>因为ASLR的存在，可执行文件在虚拟内存中的地址每次启动都是不同的，所以需要根据偏移量来计算正确的地址。这一步可以优化的点是移除不用的类和减少Catagory和selector的数量。</p>
+<p>可以使用<a href="https://github.com/dblock/fui" target="_blank" rel="external">FUI</a>来寻找没有使用到的类，也可以使用<a href="https://www.jetbrains.com/objc/" target="_blank" rel="external">AppCode</a>来寻找，这里推荐使用<code>AppCode</code>，能相对安全的移除无效引用和方法等。当然，命中之后也得小心移除，以免出现意外。<br><img src="media/15227359351082/15227408863124.jpg" alt=""><br>上图为未优化前执行结果</p>
+<p><img src="media/15227359351082/15233282896424.jpg" alt=""><br>上图为优化之后执行结果<br>经过一系列瞎比操作之后，删除了一些不必要的第三方库，大概移除了70+的无效类，900+无效方法，有些意外的是未使用的属性反而增加了。<code>pre-main</code>大概优化到了<code>330ms</code>左右，虽然优化到了推荐的<code>400ms</code>以内，但还是差强人意，待继续优化。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">Total pre-main time: 329.34 milliseconds (100.0%)</div><div class="line">         dylib loading time:  90.18 milliseconds (27.3%)</div><div class="line">        rebase/binding time:  58.19 milliseconds (17.6%)</div><div class="line">            ObjC setup time:  56.01 milliseconds (17.0%)</div><div class="line">           initializer time: 124.79 milliseconds (37.8%)</div><div class="line">           slowest intializers :</div><div class="line">             libSystem.B.dylib :  20.23 milliseconds (6.1%)</div><div class="line">   libBacktraceRecording.dylib :  10.15 milliseconds (3.0%)</div><div class="line">    libMainThreadChecker.dylib :  33.22 milliseconds (10.0%)</div></pre></td></tr></table></figure>
+<p><strong>初始化Objective C</strong><br>上一步优化完之后这里也就没啥可做的了</p>
+<p><strong>其它的初始化代码</strong><br>这一步开始动态调整<br>使用+initialize替换+load,从而加快所有类文件的加载速度.</p>
+
+  </section>
+
+</article>
+<section class="read-more">
+           
+    
+        
+        
+               
+            <div class="read-more-item">
+                <span class="read-more-item-dim">更早的文章</span>
+                <h2 class="post-list__post-title post-title"><a href="/2017/08/03/15017511329462/" title="Xcode集成O-LLVM">Xcode集成O-LLVM</a></h2>
+                <p class="excerpt">
+                
+                要在Xcode中使用O-LLVM，必须要编写一个Xcode插件。
+首先
+12345$ cd /Applications/Xcode.app/Contents/PlugIns/Xcode3Core.ideplugin/Contents/SharedSupport/Developer/Library/X
+                &hellip;
+                </p>
+                <div class="post-list__meta"><time datetime="2017-08-03T09:05:37.000Z" class="post-list__meta--date date">2017-08-03</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;
+  <a class="tag-link" href="/tags/O-LLVM/">O-LLVM</a>
+</span><a class="btn-border-small" href="/2017/08/03/15017511329462/">继续阅读</a></div>
+                       
+            </div>
+        
+     
+   
+   
+  
+</section>
+
+            
+<section class="post-comments">
+<!-- 多说评论框 start -->
+  <div class="ds-thread" data-thread-key="http://yoursite.com/2018/04/13/15227359351082/" data-title="记录一次APP启动优化" data-url="http://yoursite.com/2018/04/13/15227359351082/"></div>
+  <!-- 多说评论框 end -->
+  <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+  <script type="text/javascript">
+  var duoshuoQuery = {short_name:"sthyuhao"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+<!-- 多说公共JS代码 end -->
+
+</section>
+
+
+            <footer class="footer">
+    <span class="footer__copyright">
+        本站点采用 <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a>
+    </span>
+    <span class="footer__copyright">
+        基于 <a href="http://hexo.io">Hexo</a> 搭建，感谢 <a href="https://pages.github.com/">GitHub Pages</a> 提供免费的托管服务
+    </span>
+    <span class="footer__copyright">
+        &copy; 2018 - 本站由 <a href="/">@Monniya</a> 创建,
+        使用 <a href="https://github.com/monniya/hexo-theme-new-vno ">hexo-theme-new-vno</a> 主题,
+        修改自 <a href="https://github.com/lenbo-ma/hexo-theme-vno" target="_blank">Vno</a>, 原创出自<a href="http://github.com/onevcat/vno" target="_blank">onevcat</a>
+    </span>
+</footer>
+        </div>
+    </div>
+
+    
+
+     
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-78918255-1', 'auto');
+	ga('send', 'pageview');
+</script>
+
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?9cdad07c755fa23f6aced510c6760e87";
+            var s = document.getElementsByTagName("script")[0]; 
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+
+
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+    
+    </script>
+    
+</body>
+</html>

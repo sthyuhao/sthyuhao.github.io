@@ -125,29 +125,50 @@
   
     
     <li>
-      <h2 class="post-list__post-title post-title"><a href="/2018/01/23/集成O-LLVM/" title="link to post.title">Xcode集成O-LLVM</a></h2>
+      <h2 class="post-list__post-title post-title"><a href="/2018/04/13/15227359351082/" title="link to post.title">记录一次APP启动优化</a></h2>
       <p class="excerpt">
     
-      Xcode集成O-LLVM要在Xcode中使用O-LLVM，必须要编写一个Xcode插件。
-首先
-12345$ cd /Applications/Xcode.app/Contents/PlugIns/Xcode3Core.ideplugin/Contents/SharedSupport/Developer/Library/Xcode/Plug-ins/$ sudo cp -r Clang\ LLV
+      项目日渐庞大，代码越来越烦杂，性能问题也越来越多，准备搞一次系统性的优化。随着加载项的越来越多，app启动时感觉有很明显的卡顿现象。要做优化，先得分析APP是如何完成一次启动的，头条的这篇文章说明了
+1t(App总启动时间) = t1(main()之前的加载时间) + t2(main()之后的加载时间)。
+So,我们先分析下main()加载之前的过程。
+在target中添加一个value为1的DY
     &hellip;
       </p>
-      <div class="post-list__meta"><time datetime="2018-01-23T08:22:37.000Z" class="post-list__meta--date date">2018-01-23</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2018/01/23/集成O-LLVM/">继续阅读</a></div>
+      <div class="post-list__meta"><time datetime="2018-04-13T06:12:22.000Z" class="post-list__meta--date date">2018-04-13</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;
+  <a class="tag-link" href="/tags/优化/">优化</a>
+</span><a class="btn-border-small" href="/2018/04/13/15227359351082/">继续阅读</a></div>
       <hr class="post-list__divider" />
     </li>
   
     
     <li>
-      <h2 class="post-list__post-title post-title"><a href="/2017/05/15/LLVM与Clang的一些事儿/" title="link to post.title"></a></h2>
+      <h2 class="post-list__post-title post-title"><a href="/2017/08/03/15017511329462/" title="link to post.title">Xcode集成O-LLVM</a></h2>
       <p class="excerpt">
     
-      LLVM与Clang的一些事儿在说这篇文章之前，首先我们带入一个问题，在Xcode中我们最常使用的一个组合键cmd+b按下之后都进行了哪一些工作？伟大的ARC内存管理方式又是如何实现内存管理的？
-又或者我不了解编译过程代码照样撸得飞起，摸透这晦涩难理解的东西有什么用？
-下面要开始啰嗦了LLVM简介-来自https://zh.wikipedia.org/wiki/LLVMLLVM项目的发展起源于20
+      要在Xcode中使用O-LLVM，必须要编写一个Xcode插件。
+首先
+12345$ cd /Applications/Xcode.app/Contents/PlugIns/Xcode3Core.ideplugin/Contents/SharedSupport/Developer/Library/Xcode/Plug-ins/$ sudo cp -r Clang\ LLVM\ 1.0.xcplug
     &hellip;
       </p>
-      <div class="post-list__meta"><time datetime="2017-05-15T08:55:52.000Z" class="post-list__meta--date date">2017-05-15</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2017/05/15/LLVM与Clang的一些事儿/">继续阅读</a></div>
+      <div class="post-list__meta"><time datetime="2017-08-03T09:05:37.000Z" class="post-list__meta--date date">2017-08-03</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;
+  <a class="tag-link" href="/tags/O-LLVM/">O-LLVM</a>
+</span><a class="btn-border-small" href="/2017/08/03/15017511329462/">继续阅读</a></div>
+      <hr class="post-list__divider" />
+    </li>
+  
+    
+    <li>
+      <h2 class="post-list__post-title post-title"><a href="/2017/05/15/14948385529165/" title="link to post.title">LLVM与Clang的一些事儿</a></h2>
+      <p class="excerpt">
+    
+      在说这篇文章之前，首先我们带入一个问题，在Xcode中我们最常使用的一个组合键cmd+b按下之后都进行了哪一些工作？伟大的ARC内存管理方式又是如何实现内存管理的？
+又或者我不了解编译过程代码照样撸得飞起，摸透这晦涩难理解的东西有什么用？
+下面要开始啰嗦了LLVM简介-来自https://zh.wikipedia.org/wiki/LLVMLLVM项目的发展起源于2000年伊利诺伊大学厄巴纳-香槟
+    &hellip;
+      </p>
+      <div class="post-list__meta"><time datetime="2017-05-15T08:55:13.000Z" class="post-list__meta--date date">2017-05-15</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;
+  <a class="tag-link" href="/tags/LLVM/">LLVM</a>
+</span><a class="btn-border-small" href="/2017/05/15/14948385529165/">继续阅读</a></div>
       <hr class="post-list__divider" />
     </li>
   

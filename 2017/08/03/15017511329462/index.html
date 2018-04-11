@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     
-    <title>余生</title>
+    <title>Xcode集成O-LLVM | 余生</title>
     <meta name="renderer" content="webkit">
     <meta name="HandheldFriendly" content="True">
     <meta name="MobileOptimized" content="320">
@@ -15,11 +15,11 @@
     <meta name="description" content="我是如来佛祖玉皇大帝观音菩萨指定取西经特派使者花果山水帘洞美猴王齐天大圣孙悟空，帅的掉渣！">
 
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="余生">
+    <meta name="twitter:title" content="Xcode集成O-LLVM | 余生">
     <meta name="twitter:description" content="我是如来佛祖玉皇大帝观音菩萨指定取西经特派使者花果山水帘洞美猴王齐天大圣孙悟空，帅的掉渣！">
 
     <meta property="og:type" content="article">
-    <meta property="og:title" content="余生">
+    <meta property="og:title" content="Xcode集成O-LLVM | 余生">
     <meta property="og:description" content="我是如来佛祖玉皇大帝观音菩萨指定取西经特派使者花果山水帘洞美猴王齐天大圣孙悟空，帅的掉渣！">
 
     
@@ -123,22 +123,23 @@
 
   <header class="post-header">
     <div class="post-meta">
-      <time datetime="2017-08-03T09:05:32.000Z" class="post-list__meta--date date">2017-08-03</time> &#8226; <span class="post-meta__tags tags">于&nbsp; </span>
+      <time datetime="2017-08-03T09:05:37.000Z" class="post-list__meta--date date">2017-08-03</time> &#8226; <span class="post-meta__tags tags">于&nbsp;
+  <a class="tag-link" href="/tags/O-LLVM/">O-LLVM</a>
+ </span>
       <span class="page-pv">
       &nbsp;阅读&nbsp;<span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span>
       </span> 
    
     </div>
-    <h1 class="post-title"></h1>
+    <h1 class="post-title">Xcode集成O-LLVM</h1>
   </header>
 
   <section class="post">
-    <h1 id="Xcode集成O-LLVM"><a href="#Xcode集成O-LLVM" class="headerlink" title="Xcode集成O-LLVM"></a>Xcode集成O-LLVM</h1><p>要在Xcode中使用O-LLVM，必须要编写一个Xcode插件。</p>
+    <p>要在Xcode中使用O-LLVM，必须要编写一个Xcode插件。</p>
 <p>首先</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ cd /Applications/Xcode.app/Contents/PlugIns/Xcode3Core.ideplugin/Contents/SharedSupport/Developer/Library/Xcode/Plug-ins/</div><div class="line">$ sudo cp -r Clang\ LLVM\ 1.0.xcplugin/ Obfuscator.xcplugin</div><div class="line">$ cd Obfuscator.xcplugin/Contents/</div><div class="line">$ sudo plutil -convert xml1 Info.plist</div><div class="line">$ sudo vim Info.plist</div></pre></td></tr></table></figure>
 <p>更改</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&lt;string&gt;com.apple.compilers.clang&lt;/string&gt; -&gt; &lt;string&gt;com.apple.compilers.obfuscator&lt;/string&gt;</div><div class="line">&lt;string&gt;Clang LLVM 1.0 Compiler Xcode Plug-in&lt;/string&gt; -&gt; &lt;string&gt;Obfuscator Xcode Plug-in&lt;/string&gt;</div></pre></td></tr></table></figure>
-<p>不懂vim操作的同学请自行百度。</p>
 <p>然后：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ sudo plutil -convert binary1 Info.plist</div><div class="line">$ cd Resources/</div><div class="line">$ sudo mv Clang\ LLVM\ 1.0.xcspec Obfuscator.xcspec</div><div class="line">$ sudo vim Obfuscator.xcspec</div></pre></td></tr></table></figure>
 <p>更改：</p>
@@ -152,8 +153,7 @@
 <p>完成以上操作后重启Xcode，然后随便打开一个project，在Build Settings中更换新的编译器：<br><img src="media/15017511329462/15058024520504.jpg" alt=""></p>
 <p>将默认的编译器选项更换成Obfuscator 4.0(当然，根据你们git-clone下来的版本为准)。</p>
 <p>然后<br>我们可以添加你想要的混淆方式的标志<br><img src="media/15017511329462/15058026482988.jpg" alt=""></p>
-<p>目前O-LLVM提供的方式有三种，分别是<br>指令替换 <figure class="highlight plain"><figcaption><span>-sub```</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">控制流伪造 ```-mllvm -bcf</div></pre></td></tr></table></figure></p>
-<p>控制流平展 <code>-mllvm -fla</code></p>
+<p>目前O-LLVM提供的方式有三种，分别是<br>指令替换 <code>-mllvm -sub</code><br>控制流伪造 <code>-mllvm -bcf</code><br>控制流平展 <code>-mllvm -fla</code></p>
 <p>具体的替换模式请查阅<a href="https://github.com/obfuscator-llvm/obfuscator/wiki" target="_blank" rel="external">官方WIKI</a></p>
 
   </section>
@@ -162,22 +162,37 @@
 <section class="read-more">
            
     
+               
+            <div class="read-more-item">
+                <span class="read-more-item-dim">最近的文章</span>
+                <h2 class="post-list__post-title post-title"><a href="/2018/04/13/15227359351082/" title="记录一次APP启动优化">记录一次APP启动优化</a></h2>
+                <p class="excerpt">
+                
+                项目日渐庞大，代码越来越烦杂，性能问题也越来越多，准备搞一次系统性的优化。随着加载项的越来越多，app启动时感觉有很明显的卡顿现象。要做优化，先得分析APP是如何完成一次启动的，头条的这篇文章说明了
+1t(App总启动时间) = t1(main()之前的加载时间) + t2(main()之后的加载时
+                &hellip;
+                </p>
+                <div class="post-list__meta"><time datetime="2018-04-13T06:12:22.000Z" class="post-list__meta--date date">2018-04-13</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;
+  <a class="tag-link" href="/tags/优化/">优化</a>
+</span><a class="btn-border-small" href="/2018/04/13/15227359351082/">继续阅读</a></div>
+                           
+            </div>
         
         
                
             <div class="read-more-item">
                 <span class="read-more-item-dim">更早的文章</span>
-                <h2 class="post-list__post-title post-title"><a href="/2017/02/18/FirstNight/" title=""></a></h2>
+                <h2 class="post-list__post-title post-title"><a href="/2017/05/15/14948385529165/" title="LLVM与Clang的一些事儿">LLVM与Clang的一些事儿</a></h2>
                 <p class="excerpt">
                 
-                
- title: First Night
-我有一头小毛驴，可是我从来都不骑。
-
-
+                在说这篇文章之前，首先我们带入一个问题，在Xcode中我们最常使用的一个组合键cmd+b按下之后都进行了哪一些工作？伟大的ARC内存管理方式又是如何实现内存管理的？
+又或者我不了解编译过程代码照样撸得飞起，摸透这晦涩难理解的东西有什么用？
+下面要开始啰嗦了LLVM简介-来自https://zh.wi
                 &hellip;
                 </p>
-                <div class="post-list__meta"><time datetime="2017-02-18T08:19:21.000Z" class="post-list__meta--date date">2017-02-18</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2017/02/18/FirstNight/">继续阅读</a></div>
+                <div class="post-list__meta"><time datetime="2017-05-15T08:55:13.000Z" class="post-list__meta--date date">2017-05-15</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;
+  <a class="tag-link" href="/tags/LLVM/">LLVM</a>
+</span><a class="btn-border-small" href="/2017/05/15/14948385529165/">继续阅读</a></div>
                        
             </div>
         
@@ -190,7 +205,7 @@
             
 <section class="post-comments">
 <!-- 多说评论框 start -->
-  <div class="ds-thread" data-thread-key="http://yoursite.com/2017/08/03/15017511329462/" data-title="" data-url="http://yoursite.com/2017/08/03/15017511329462/"></div>
+  <div class="ds-thread" data-thread-key="http://yoursite.com/2017/08/03/15017511329462/" data-title="Xcode集成O-LLVM" data-url="http://yoursite.com/2017/08/03/15017511329462/"></div>
   <!-- 多说评论框 end -->
   <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
   <script type="text/javascript">
