@@ -12,13 +12,13 @@
 <p>Clang的在出生之前就已经明确了他的使命——干掉该死的GCC。有了LLVM+Clang，从此，苹果的开发面貌焕然一新。从此摆脱了GCC的限制。客观的说GCC是有很多的优点，例如支持多平台，很流行，基于C无需C++编译器即可编译。这些优点到苹果那就可能是缺点了，苹果需要的是——快。这正是Clang的优点，除了快，它还有与GCC兼容，内存占用小，诊断信息可读性强，易扩展，易于IDE集成等等优点。有个测试数据:Clang编译Objective-C代码时速度为GCC的3倍。</p>
 <hr>
 <h3 id="LLDB"><a href="#LLDB" class="headerlink" title="LLDB"></a>LLDB</h3><p>GCC有个强大的诊断工具——GDB，相对应的Clang下纠错工具就是LLDB。对于LLDB大家应该都不陌生，它继承了GDB的优点，弥补GDB的不足。iOS开发者从gbd过渡到lldb没有任何不适应感，最直白的原因就是lldb和gdb常用的命令很多都是一样的，例如常用的po等。</p>
-<h2 id="啰嗦到此结束"><a href="#啰嗦到此结束" class="headerlink" title="啰嗦到此结束"></a>啰嗦到此结束</h2><h3 id="iOS编译过程"><a href="#iOS编译过程" class="headerlink" title="iOS编译过程"></a>iOS编译过程</h3><p><img src="media/15422495792461.jpg" alt=""></p>
-<p>Objective-C与swift都采用Clang作为编译器前端，编译器前端主要进行语法分析，语义分析，生成中间代码，在这个过程中，会进行类型检查，如果发现错误或者警告会标注出来在哪一行。<br><img src="media/15422495907604.png" alt=""></p>
+<h2 id="啰嗦到此结束"><a href="#啰嗦到此结束" class="headerlink" title="啰嗦到此结束"></a>啰嗦到此结束</h2><h3 id="iOS编译过程"><a href="#iOS编译过程" class="headerlink" title="iOS编译过程"></a>iOS编译过程</h3><p><img src="https://raw.githubusercontent.com/sthyuhao/BlogImgZone/master/50b10bb214170deb37de425f6e9598.jpg" alt=""></p>
+<p>Objective-C与swift都采用Clang作为编译器前端，编译器前端主要进行语法分析，语义分析，生成中间代码，在这个过程中，会进行类型检查，如果发现错误或者警告会标注出来在哪一行。<br><img src="https://raw.githubusercontent.com/sthyuhao/BlogImgZone/master/6195d8a0c78405defca857e1274f61.png" alt=""></p>
 <p>编译器后端会进行机器无关的代码优化，生成机器语言，并且进行机器相关的代码优化，根据不同的系统架构生成不同的机器码。</p>
 <p>C++,Objective C都是编译语言。编译语言在执行的时候，必须先通过编译器生成机器码。</p>
-<p><img src="media/15422496259348.jpg" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/sthyuhao/BlogImgZone/master/9d1badbd48d13028f4e28d14271885.jpg" alt=""></p>
 <p>如上图所示，在xcode按下cmd+B之后的工作流程。</p>
-<p><strong>预处理（Pre-process）</strong>：他的主要工作就是将宏替换，删除注释展开头文件，生成.i文件。<br><strong>词法分析 （Lexical Analysis）</strong>：将代码切成一个个 token，比如大小括号，等于号还有字符串等。是计算机科学中将字符序列转换为标记序列的过程。<br><strong>语法分析（Semantic Analysis）</strong>：验证语法是否正确，然后将所有节点组成抽象语法树 AST 。由 Clang 中 Parser 和 Sema 配合完成<br><strong>静态分析（Static Analysis）</strong>：使用它来表示用于分析源代码以便自动发现错误。<br><strong>中间代码生成（Code Generation）</strong>：开始IR中间代码的生成了，CodeGen 会负责将语法树自顶向下遍历逐步翻译成 LLVM IR，IR 是编译过程的前端的输出后端的输入。<br><strong>优化（Optimize）</strong>：LLVM 会去做些优化工作，在 Xcode 的编译设置里也可以设置优化级别-01，-03，-0s，还可以写些自己的 Pass，官方有比较完整的 Pass 教程： Writing an LLVM Pass — LLVM 5 documentation 。如果开启了 bitcode 苹果会做进一步的优化，有新的后端架构还是可以用这份优化过的 bitcode 去生成。<br><img src="media/15422496420052.jpg" alt=""></p>
+<p><strong>预处理（Pre-process）</strong>：他的主要工作就是将宏替换，删除注释展开头文件，生成.i文件。<br><strong>词法分析 （Lexical Analysis）</strong>：将代码切成一个个 token，比如大小括号，等于号还有字符串等。是计算机科学中将字符序列转换为标记序列的过程。<br><strong>语法分析（Semantic Analysis）</strong>：验证语法是否正确，然后将所有节点组成抽象语法树 AST 。由 Clang 中 Parser 和 Sema 配合完成<br><strong>静态分析（Static Analysis）</strong>：使用它来表示用于分析源代码以便自动发现错误。<br><strong>中间代码生成（Code Generation）</strong>：开始IR中间代码的生成了，CodeGen 会负责将语法树自顶向下遍历逐步翻译成 LLVM IR，IR 是编译过程的前端的输出后端的输入。<br><strong>优化（Optimize）</strong>：LLVM 会去做些优化工作，在 Xcode 的编译设置里也可以设置优化级别-01，-03，-0s，还可以写些自己的 Pass，官方有比较完整的 Pass 教程： Writing an LLVM Pass — LLVM 5 documentation 。如果开启了 bitcode 苹果会做进一步的优化，有新的后端架构还是可以用这份优化过的 bitcode 去生成。<br><img src="https://raw.githubusercontent.com/sthyuhao/BlogImgZone/master/5a24c4cd300e6bbc613fbf7ee678fc.jpg" alt=""></p>
 <p><strong>生成目标文件（Assemble）</strong>：生成Target相关Object(Mach-o)<br><strong>链接（Link）</strong>：生成 Executable 可执行文件</p>
 <p>经过这一步步，我们用各种高级语言编写的代码就转换成了机器可以看懂可以执行的目标代码了。</p>
 <hr>
@@ -36,18 +36,18 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">//允许未被默认允许的check并进行代码分析并将输出结果输出至网页</div><div class="line">./scan-build  -enable-checker alpha.security.ArrayBoundV2 --use-analyzer=/opt/llvm/llvm_build/bin -V xcodebuild  -project /Users/yuhao/TestClang/TestClang.xcodeproj -sdk iphonesimulator10.3</div></pre></td></tr></table></figure>
 <p>我们在TestClang.xcodeproj的main.m文件中插入一段<strong>数组越界</strong>的代码</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">int main()&#123;</div><div class="line">    @autoreleasepool &#123;</div><div class="line">        int a[2];</div><div class="line">        int i;</div><div class="line">        for (i = 0; i &lt; 3; i++)&#123;</div><div class="line">            a[i] = 0;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>然后执行上面的命令，会导出这样的一个界面<br><img src="media/15422496726776.jpg" alt=""></p>
-<p>查看报表<br><img src="media/15422496840944.jpg" alt=""></p>
+<p>然后执行上面的命令，会导出这样的一个界面<br><img src="https://raw.githubusercontent.com/sthyuhao/BlogImgZone/master/aa1371b1bc6294c6670c06405d21af.jpg" alt=""></p>
+<p>查看报表<br><img src="https://raw.githubusercontent.com/sthyuhao/BlogImgZone/master/dd6c434ef2591422dd73a921127933.jpg" alt=""></p>
 <p>报表中提示了该代码有数组越界的问题。</p>
-<h4 id="Xcode执行"><a href="#Xcode执行" class="headerlink" title="Xcode执行"></a>Xcode执行</h4><p>Xcode本身已经自带了静态检测的功能，可以通过Product-Analyze来执行静态检测，这也只是用自带的clang去执行，如果想用其他的版本，比如自己编译clang，就需要通过命令来设置。<br><img src="media/15422496930936.jpg" alt=""></p>
+<h4 id="Xcode执行"><a href="#Xcode执行" class="headerlink" title="Xcode执行"></a>Xcode执行</h4><p>Xcode本身已经自带了静态检测的功能，可以通过Product-Analyze来执行静态检测，这也只是用自带的clang去执行，如果想用其他的版本，比如自己编译clang，就需要通过命令来设置。<br><img src="https://raw.githubusercontent.com/sthyuhao/BlogImgZone/master/04cbdacc0319f3038d048b3a8d4154.jpg" alt=""></p>
 <p>在Xcode的Product选项卡下有Analyze的选项，Xcode中默认提供了一些checkers。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">Usage: set-xcode-analyzer [options]</div><div class="line"></div><div class="line">Options:</div><div class="line">  -h, --help            show this help message and exit</div><div class="line">  --use-checker-build=PATH</div><div class="line">                        Use the Clang located at the provided absolute path,</div><div class="line">                        e.g. /Users/foo/checker-1</div><div class="line">  --use-xcode-clang     Use the Clang bundled with Xcode</div></pre></td></tr></table></figure>
 <p>可以看到，它有2个选项，</p>
 <p><code>--use-checker-build</code>：用于将xcode的clang版本切换成设定的版本<br><code>--use-xcode-clang</code>：用于将xcode的clang版本切换回去</p>
 <p>注：在执行上面命令的时候，需要退出xcode执行；且需要用sudo的方式运行。</p>
-<p>依然使用上面的project文件，在Build Settings添加参数，如图<img src="media/15422497082865.jpg" alt=""></p>
+<p>依然使用上面的project文件，在Build Settings添加参数，如图<img src="https://raw.githubusercontent.com/sthyuhao/BlogImgZone/master/34cf8b8a5732703934475d751b1091.jpg" alt=""></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">-Xanalyzer -analyzer-checker=alpha.security.ArrayBoundV2</div></pre></td></tr></table></figure>
-<p>然后cmd+shift+b<br><img src="media/15422497183904.jpg" alt=""></p>
+<p>然后cmd+shift+b<br><img src="https://raw.githubusercontent.com/sthyuhao/BlogImgZone/master/b7736892a027cb392fbf49be64b5f1.jpg" alt=""></p>
 <p>在Xcode中也出现了和报表同样的提示。<br>关于checker的开发可以看<a href="http://clang-analyzer.llvm.org.cn/checker_dev_manual.html" target="_blank" rel="external">这里</a>。</p>
 <hr>
 <h3 id="关于ARC（AUTOMATIC-REFERENCE-COUNTING）"><a href="#关于ARC（AUTOMATIC-REFERENCE-COUNTING）" class="headerlink" title="关于ARC（AUTOMATIC REFERENCE COUNTING）"></a>关于ARC（AUTOMATIC REFERENCE COUNTING）</h3><p>ARC是ios5.0引入的新特性，完全消除手动管理内存的繁琐，编译器会自动在适合的代码里面插入适当的retain，release，autorelease的语句。我们不要再担心内存管理，因为编译器帮我们做了这一切。<br>我们都知道ARC的规则就是只要对象没有强指针引用，就会被释放掉。那么，该对象是什么时候被释放，又是谁操作去释放该对象的？</p>
