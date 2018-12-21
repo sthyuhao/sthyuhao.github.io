@@ -1,0 +1,50 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="author" content="sthyuhao"><title> · 余额不足</title><meta name="description" content="title: Hikari lldb_codesign: no identity found 解决方案date: 2018-12-21 11:30:10categories:    - 混淆tags:    - LLVMdescription:
+
+comments: true
+
+此文记录了编译Hik"><meta name="keywords" content="iOS"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="renderer" content="webkit"><link rel="short icon" href="/images/favicon.png" type="image/x-icon"><link rel="stylesheet" href="/css/style.css"><link rel="stylesheet" href="/css/blog_basic.css"><link rel="stylesheet" href="/css/font-awesome.min.css"><link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="/atom.xml"></head><body><div class="sidebar animated fadeInDown"><div class="logo-title"><div class="title"><img src="/images/logo@2x.png" style="width:127px;"><h3 title=""><a href="/">余额不足</a></h3><div class="description"><p>人必有所执，方能有所成。</p></div></div></div><ul class="social-links"><li><a href="http://github.com/sthyuhao"><i class="fa fa-github"></i></a></li></ul><div class="footer"><a target="_blank" href="/"><span>Theme by </span></a><a href="https://www.caicai.me"> CaiCai </a><span>&</span><a href="https://github.com/Ben02/hexo-theme-Anatole"> Ben</a><div class="by_farbox"><a href="https://hexo.io/zh-cn/" target="_blank">Proudly published with Hexo&#65281;</a></div></div></div><div class="main"><div class="page-top animated fadeInDown"><div class="nav"><li><a href="/">首页</a></li><li><a href="/archives">归档</a></li></div><div class="information"><div class="back_btn"><li><a class="fa fa-chevron-left" onclick="window.history.go(-1)"> </a></li></div><div class="avatar"><img src="/images/logo.png"></div></div></div><div class="autopagerize_page_element"><div class="content"><div class="post-page"><div class="post animated fadeInDown"><div class="post-title"><h3><a></a></h3></div><div class="post-content"><hr>
+
+<p>title: Hikari lldb_codesign: no identity found 解决方案<br><br>date: 2018-12-21 11:30:10<br><br>categories:<br><br>    - 混淆<br><br>tags:<br><br>    - LLVM<br><br>description:</p>
+
+<h2 id="toc_0">comments: true</h2>
+
+<p>此文记录了编译Hikari混淆器所遇到的问题，希望对有同样问题的你有些帮助，也写给未来遇到问题的自己。</p>
+
+<h2 id="toc_1">问题</h2>
+
+<p>准备在项目中引入Hikari混淆器，Xcode9编译成功后并且能正常运行，但最近苹果修复了Xcode10打包iOS9Crash的问题后我也就把macOS升级到了mojave，Xcode也升级到了10，问题也就来了，之前的Hikari ToolChain也没法用了，怎么办？重装呗！</p>
+
+<p>重新执行</p>
+
+<pre><code>git clone -b release_70 --recursive https://github.com/HikariObfuscator/Hikari.git Hikari &amp;&amp; mkdir Build &amp;&amp; cd Build &amp;&amp; cmake -G &quot;Ninja&quot; -DCMAKE_BUILD_TYPE=MinSizeRel -DLLVM_APPEND_VC_REV=on -DLLVM_CREATE_XCODE_TOOLCHAIN=on -DCMAKE_INSTALL_PREFIX=~/Library/Developer/ ../Hikari &amp;&amp; ninja &amp;&amp;ninja install-xcode-toolchain &amp;&amp; git clone https://github.com/HikariObfuscator/Resources.git ~/Hikari &amp;&amp; rsync -a --ignore-existing /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/ ~/Library/Developer/Toolchains/Hikari.xctoolchain/ &amp;&amp; rm ~/Library/Developer/Toolchains/Hikari.xctoolchain/ToolchainInfo.plist
+
+</code></pre>
+
+<p>困扰了我两天的问题来了</p>
+
+<pre><code>[4399/4695] Linking CXX executable bin/debugserver
+FAILED: bin/debugserver
+: &amp;&amp; /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  -fPIC -fvisibility-inlines-hidden -Werror=date-time -Werror=unguarded-availability-new -std=c++11 -Wall -Wextra -Wno-unused-parameter -Wwrite-strings -Wcast-qual -Wmissing-field-initializers -pedantic -Wno-long-long -Wcovered-switch-default -Wnon-virtual-dtor -Wdelete-non-virtual-dtor -Wstring-conversion -fdiagnostics-color -Wno-deprecated-declarations -Wno-unknown-pragmas -Wno-strict-aliasing -Wno-deprecated-register -Wno-vla-extension -Wno-gnu-zero-variadic-macro-arguments -Wno-zero-length-array -Wno-extended-offsetof -Os -DNDEBUG -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names -stdlib=libc++ -Wl,-sectcreate,__TEXT,__info_plist,/Users/yuhao/HikariObfuscator/Hikari/tools/lldb/tools/debugserver/source/../resources/lldb-debugserver-Info.plist    -Wl,-dead_strip tools/lldb/tools/debugserver/source/CMakeFiles/debugserver.dir/debugserver.cpp.o  -o bin/debugserver  -Wl,-rpath,@loader_path/../lib lib/liblldbDebugserverCommon.a -framework Cocoa -framework CoreFoundation -framework Foundation lib/liblldbDebugserverArchSupport.a lib/liblldbDebugserverDarwin_DarwinLog.a -lcompression &amp;&amp; cd /Users/yuhao/HikariObfuscator/Build/bin &amp;&amp; /usr/local/Cellar/cmake/3.13.2/bin/cmake -E env CODESIGN_ALLOCATE=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/codesign_allocate codesign --force --sign lldb_codesign --entitlements /Users/yuhao/HikariObfuscator/Hikari/tools/lldb/tools/debugserver/source/../../../resources/debugserver-macosx-entitlements.plist /Users/yuhao/HikariObfuscator/Build/bin/debugserver
+lldb_codesign: no identity found
+</code></pre>
+
+<p>最初碰到问题时觉得是执行debugserver出问题了，也没有仔细查看问题就直接去google了，然而看了一遍遍的文章，一篇篇别的LLVM项目的issue也能解决问题。后来觉得会不会是debugserver在mojave和Xcode10上是不是有什么问题？然后找到了一个<a href="https://github.com/derekparker/delve/issues/1398" target="_blank" rel="external">issue</a>，这里表示需要安装完整的Xcode command line tools，随后执行了<code>xcode-select –install</code>，执行完再次编译Hikari，依然出现同样的错误。</p>
+
+<p>看看Hikari的issue吧，也许会遇到同样错误的同学，果不其然<a href="https://github.com/HikariObfuscator/Hikari/issues/24" target="_blank" rel="external">Linking CXX executable bin/debugserver failed</a>。<br><br>这个issue也同样遇到了<code>Linking CXX executable bin/debugserver<br><br>FAILED</code>的问题，但看了下内容，好像并不一样，zhang总的回答是<code>Just remove lldb from tools/lldb, it&#39;s too much troublesome to setup on macOS</code>，于是跟着照做，再次编译。WTF，两小时过去后依然卡在同一个位置。</p>
+
+<h2 id="toc_2">找到问题的根本原因</h2>
+
+<p>仔细分析错误日志，日志的最后提到了<code>lldb_codesign: no identity found</code>，再次google，搜到的回答有说需要check一下<code>lldb_codesign</code>的<code>certificate</code>，我也是哔了狗了，最终的解决方案就是添加一个<code>lldb_codesign</code>证书，信任就行了，具体执行请参照<a href="https://opensource.apple.com/source/lldb/lldb-69/docs/code-signing.txt" target="_blank" rel="external">这里</a>。</p>
+
+<p>到这，Hikari编译加配置是成功了，更换了Xcode的ToolChain，build一哈，一个新的问题又来了<br><br><code>clang: error: cannot specify -o when generating multiple output files</code><br><br><img src="https://raw.githubusercontent.com/sthyuhao/BlogImgZone/master/77d0b794a9a38339c7d9eff92e990e.jpg" alt=""><br><br>如上图所示，将图中的配置项置成NO即可，再次Build，Perfect！</p>
+
+
+</div><div class="post-footer"><div class="meta"><div class="info"><i class="fa fa-sun-o"></i><span class="date">2018-12-21</span><i class="fa fa-comment-o"></i><a href="/2018/12/21/2018-12-21/#comments">评论</a><i class="fa fa-tag"></i></div></div></div></div><div class="share"><div class="evernote"><a class="fa fa-bookmark" href="javascript:(function(){EN_CLIP_HOST='http://www.evernote.com';try{var%20x=document.createElement('SCRIPT');x.type='text/javascript';x.src=EN_CLIP_HOST+'/public/bookmarkClipper.js?'+(new%20Date().getTime()/100000);document.getElementsByTagName('head')[0].appendChild(x);}catch(e){location.href=EN_CLIP_HOST+'/clip.action?url='+encodeURIComponent(location.href)+'&amp;title='+encodeURIComponent(document.title);}})();" ref="nofollow" target="_blank"></a></div><div class="weibo"><a class="fa fa-weibo" href="javascript:void((function(s,d,e){try{}catch(e){}var f='http://service.weibo.com/share/share.php?',u=d.location.href,p=['url=',e(u),'&amp;title=',e(d.title),'&amp;appkey=2924220432'].join('');function a(){if(!window.open([f,p].join(''),'mb',['toolbar=0,status=0,resizable=1,width=620,height=450,left=',(s.width-620)/2,',top=',(s.height-450)/2].join('')))u.href=[f,p].join('');};if(/Firefox/.test(navigator.userAgent)){setTimeout(a,0)}else{a()}})(screen,document,encodeURIComponent));"></a></div><div class="twitter"><a class="fa fa-twitter" href="http://twitter.com/home?status=,http://yoursite.com/2018/12/21/2018-12-21/,余额不足,,;"></a></div></div><div class="pagination"><ul class="clearfix"><li class="next pagbuttons"><a class="btn" role="navigation" href="/2018/11/12/2018-11-12/" title="解析__block">下一篇</a></li></ul></div><a id="comments"></a><div id="disqus_thread"></div><script>var disqus_shortname = 'sthyuhao';
+var disqus_identifier = '2018/12/21/2018-12-21/';
+var disqus_title = '';
+var disqus_url = 'http://yoursite.com/2018/12/21/2018-12-21/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//#{theme.disqus}.disqus.com/count.js" async></script></div></div></div></div><script src="/js/jquery.js"></script><script src="/js/jquery-migrate-1.2.1.min.js"></script><script src="/js/jquery.appear.js"></script></body></html>
