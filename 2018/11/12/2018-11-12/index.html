@@ -1,4 +1,89 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta name="generator" content="Hexo 3.8.0"><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><meta name="author" content="sthyuhao"><title>解析__block · 余额不足</title><meta name="description" content="__block在什么情况下使用？前一篇文章中我们知道了block拥有捕获变量的能力，但是block却不能改变自动变量的值，每当我们尝试着在block中修改某个自动变量的时候编译器都会抛出一个错误Variable is not assignable (missing __block type spec"><meta name="keywords" content="iOS"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="renderer" content="webkit"><link rel="short icon" href="/images/favicon.png" type="image/x-icon"><link rel="stylesheet" href="/css/style.css"><link rel="stylesheet" href="/css/blog_basic.css"><link rel="stylesheet" href="/css/font-awesome.min.css"><link rel="alternate" type="application/atom+xml" title="ATOM 1.0" href="/atom.xml"></head><body><div class="sidebar animated fadeInDown"><div class="logo-title"><div class="title"><img src="/images/logo@2x.png" style="width:127px;"><h3 title><a href="/">余额不足</a></h3><div class="description"><p>人必有所执，方能有所成。</p></div></div></div><ul class="social-links"><li><a href="http://github.com/sthyuhao"><i class="fa fa-github"></i></a></li></ul><div class="footer"><a target="_blank" href="/"><span>Theme by </span></a><a href="https://www.caicai.me"> CaiCai </a><span>&</span><a href="https://github.com/Ben02/hexo-theme-Anatole"> Ben</a><div class="by_farbox"><a href="https://hexo.io/zh-cn/" target="_blank">Proudly published with Hexo&#65281;</a></div></div></div><div class="main"><div class="page-top animated fadeInDown"><div class="nav"><li><a href="/">Home</a></li><li><a href="/archives">Arquivo</a></li></div><div class="information"><div class="back_btn"><li><a class="fa fa-chevron-left" onclick="window.history.go(-1)"> </a></li></div><div class="avatar"><img src="/images/logo.png"></div></div></div><div class="autopagerize_page_element"><div class="content"><div class="post-page"><div class="post animated fadeInDown"><div class="post-title"><h3><a>解析__block</a></h3></div><div class="post-content"><h2 id="block在什么情况下使用？"><a href="#block在什么情况下使用？" class="headerlink" title="__block在什么情况下使用？"></a>__block在什么情况下使用？</h2><p>前一篇文章中我们知道了block拥有捕获变量的能力，但是block却不能改变自动变量的值，每当我们尝试着在block中修改某个自动变量的时候编译器都会抛出一个错误<code>Variable is not assignable (missing __block type specifier)</code>,表示该变量在block中不可被赋值，需要使用__block修饰。但是当我们尝试在block中去修改全局变量、静态变量、全局静态变量却是可以通过的，这是为什么？</p>
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>解析__block | 余额不足</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="__block在什么情况下使用？前一篇文章中我们知道了block拥有捕获变量的能力，但是block却不能改变自动变量的值，每当我们尝试着在block中修改某个自动变量的时候编译器都会抛出一个错误Variable is not assignable (missing __block type specifier),表示该变量在block中不可被赋值，需要使用__block修饰。但是当我们尝试在blo">
+<meta name="keywords" content="block">
+<meta property="og:type" content="article">
+<meta property="og:title" content="解析__block">
+<meta property="og:url" content="http://yoursite.com/2018/11/12/2018-11-12/index.html">
+<meta property="og:site_name" content="余额不足">
+<meta property="og:description" content="__block在什么情况下使用？前一篇文章中我们知道了block拥有捕获变量的能力，但是block却不能改变自动变量的值，每当我们尝试着在block中修改某个自动变量的时候编译器都会抛出一个错误Variable is not assignable (missing __block type specifier),表示该变量在block中不可被赋值，需要使用__block修饰。但是当我们尝试在blo">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://raw.githubusercontent.com/sthyuhao/BlogImgZone/master/ff9b239d9e7036bbfcf7cecf4c4391.jpg">
+<meta property="og:updated_time" content="2018-11-16T09:06:31.678Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="解析__block">
+<meta name="twitter:description" content="__block在什么情况下使用？前一篇文章中我们知道了block拥有捕获变量的能力，但是block却不能改变自动变量的值，每当我们尝试着在block中修改某个自动变量的时候编译器都会抛出一个错误Variable is not assignable (missing __block type specifier),表示该变量在block中不可被赋值，需要使用__block修饰。但是当我们尝试在blo">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/sthyuhao/BlogImgZone/master/ff9b239d9e7036bbfcf7cecf4c4391.jpg">
+  
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">余额不足</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-2018-11-12" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/11/12/2018-11-12/" class="article-date">
+  <time datetime="2018-11-12T11:41:50.000Z" itemprop="datePublished">2018-11-12</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/block/">block</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      解析__block
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="block在什么情况下使用？"><a href="#block在什么情况下使用？" class="headerlink" title="__block在什么情况下使用？"></a>__block在什么情况下使用？</h2><p>前一篇文章中我们知道了block拥有捕获变量的能力，但是block却不能改变自动变量的值，每当我们尝试着在block中修改某个自动变量的时候编译器都会抛出一个错误<code>Variable is not assignable (missing __block type specifier)</code>,表示该变量在block中不可被赋值，需要使用__block修饰。但是当我们尝试在block中去修改全局变量、静态变量、全局静态变量却是可以通过的，这是为什么？</p>
 <p>block捕获到的自动变量只是该变量的值，而全局变量、静态变量、全局静态变量的值为什么能修改？<br>全局变量和静态全局变量是存储在内存全局区，因为作用域的原因使得他们可以在block中被修改。<br>静态变量被block捕获的是内存地址的值，所以也能被修改。</p>
 <h2 id="block修饰符都做了些啥？"><a href="#block修饰符都做了些啥？" class="headerlink" title="__block修饰符都做了些啥？"></a>__block修饰符都做了些啥？</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> * argv[])</span> </span>&#123;</span><br><span class="line">    @autoreleasepool &#123;</span><br><span class="line">        __block <span class="keyword">int</span> val = <span class="number">1</span>;</span><br><span class="line">        __block NSString *str = [NSString <span class="built_in">string</span>];</span><br><span class="line">        NSLog(@<span class="string">"val初始化地址-%p"</span>, &amp;val);</span><br><span class="line">        NSLog(@<span class="string">"str初始化地址-%p"</span>, &amp;str);</span><br><span class="line">        <span class="keyword">void</span> (^aBlock)(<span class="keyword">void</span>) = ^&#123;</span><br><span class="line">            val++;</span><br><span class="line">            str = @<span class="string">"a"</span>;</span><br><span class="line">            NSLog(@<span class="string">"val block地址-%p"</span>, &amp;val);</span><br><span class="line">            NSLog(@<span class="string">"str block地址-%p"</span>, &amp;str);</span><br><span class="line">        &#125;;</span><br><span class="line">        NSLog(@<span class="string">"%@"</span>, aBlock);</span><br><span class="line">        aBlock();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>老套路，<code>clang -rewrite-objc maim.m</code></p>
@@ -14,12 +99,148 @@
 <p>执行完之后可以发现block已经变成了<code>NSMallocBlock</code>，而<code>val</code>和<code>str</code>的地址与block的地址相差很小，很大概率上他们也存在了堆区，然后结合下图去分析 <img src="https://raw.githubusercontent.com/sthyuhao/BlogImgZone/master/ff9b239d9e7036bbfcf7cecf4c4391.jpg" alt></p>
 <p><code>__cself-&gt;val</code>指向的是栈区的<code>val</code>，但是block中<code>val</code>已经被复制到了堆区，堆区的<code>val</code>指向自己没有任何的问题，但是当访问的是栈区的<code>val</code>要怎样才能正确的访问到变量的值？<code>__forwarding</code> 被设计出来就是为了解决这个问题，如上图所示，栈区的 <code>__forwarding</code> 指向了复制到堆后的 <code>val</code> ，而堆上<code>val</code>指向自己，这也就保证了不论是访问栈还是堆上的<code>val</code>都能获取到正确的值。</p>
 <p>再看看重写后的<code>(val-&gt;__forwarding-&gt;val)</code>，是不是已经明白了？</p>
-</div><div class="post-footer"><div class="meta"><div class="info"><i class="fa fa-sun-o"></i><span class="date">2018-11-12</span><i class="fa fa-comment-o"></i><a href="/2018/11/12/2018-11-12/#comments">Comentários</a><i class="fa fa-tag"></i><a class="tag" href="/categories/block/" title="block">block </a><a class="tag" href="/tags/block/" title="block">block </a></div></div></div></div><div class="share"><div class="evernote"><a class="fa fa-bookmark" href="javascript:(function(){EN_CLIP_HOST='http://www.evernote.com';try{var%20x=document.createElement('SCRIPT');x.type='text/javascript';x.src=EN_CLIP_HOST+'/public/bookmarkClipper.js?'+(new%20Date().getTime()/100000);document.getElementsByTagName('head')[0].appendChild(x);}catch(e){location.href=EN_CLIP_HOST+'/clip.action?url='+encodeURIComponent(location.href)+'&amp;title='+encodeURIComponent(document.title);}})();" ref="nofollow" target="_blank"></a></div><div class="weibo"><a class="fa fa-weibo" href="javascript:void((function(s,d,e){try{}catch(e){}var f='http://service.weibo.com/share/share.php?',u=d.location.href,p=['url=',e(u),'&amp;title=',e(d.title),'&amp;appkey=2924220432'].join('');function a(){if(!window.open([f,p].join(''),'mb',['toolbar=0,status=0,resizable=1,width=620,height=450,left=',(s.width-620)/2,',top=',(s.height-450)/2].join('')))u.href=[f,p].join('');};if(/Firefox/.test(navigator.userAgent)){setTimeout(a,0)}else{a()}})(screen,document,encodeURIComponent));"></a></div><div class="twitter"><a class="fa fa-twitter" href="http://twitter.com/home?status=,http://yoursite.com/2018/11/12/2018-11-12/,余额不足,解析__block,;"></a></div></div><div class="pagination"><ul class="clearfix"><li class="pre pagbuttons"><a class="btn" role="navigation" href="/2018/12/21/2018-12-21/" title="集成Hikari问题汇总">Post Anterior</a></li><li class="next pagbuttons"><a class="btn" role="navigation" href="/2018/11/01/2018-10-31/" title="从源码分析Block的内存管理">Próximo post</a></li></ul></div><a id="comments"></a><div id="disqus_thread"></div><script>var disqus_shortname = 'sthyuhao';
-var disqus_identifier = '2018/11/12/2018-11-12/';
-var disqus_title = '解析__block';
-var disqus_url = 'http://yoursite.com/2018/11/12/2018-11-12/';
-(function() {
-    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-})();</script><script id="dsq-count-scr" src="//#{theme.disqus}.disqus.com/count.js" async></script></div></div></div></div><script src="/js/jquery.js"></script><script src="/js/jquery-migrate-1.2.1.min.js"></script><script src="/js/jquery.appear.js"></script></body></html>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/11/12/2018-11-12/" data-id="cju0vsodp0000m9umsrcd3cni" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/block/">block</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/12/21/2018-12-21/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          集成Hikari问题汇总
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/11/01/2018-10-31/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">从源码分析Block的内存管理</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    <!-- Featured Tags -->
+
+  
+    <!-- Short About -->
+<section class="visible-md visible-lg">
+    <h5><a href="/about/">ABOUT ME</a></h5>
+    <div class="short-about">
+
+        
+
+        
+
+        <!-- SNS Link -->
+        <ul class="list-inline">
+            
+            
+            
+
+            
+
+            
+
+            
+            
+            
+            
+        </ul>
+    </div>
+</section>
+  
+    
+  <h5>RECENT POSTS
+  <div class="widget">
+    <ul>
+      
+        <li>
+          <a href="/2019/03/20/2019-03-20/">扒一扒Category以及关联对象</a>
+        </li>
+      
+        <li>
+          <a href="/2019/02/13/2019-02-13/">年初的一些感慨</a>
+        </li>
+      
+        <li>
+          <a href="/2018/12/21/2018-12-21/">集成Hikari问题汇总</a>
+        </li>
+      
+        <li>
+          <a href="/2018/11/12/2018-11-12/">解析__block</a>
+        </li>
+      
+        <li>
+          <a href="/2018/11/01/2018-10-31/">从源码分析Block的内存管理</a>
+        </li>
+      
+    </ul>
+  </div>
+</h5>
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Category/">Category</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/LLVM/">LLVM</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/block/">block</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/优化/">优化</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/内存管理/">内存管理</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/混淆/">混淆</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/逆向/">逆向</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/随笔杂谈/">随笔杂谈</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 余果<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>
