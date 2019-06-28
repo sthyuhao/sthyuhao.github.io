@@ -346,25 +346,27 @@
     
     
     <article class="index-post">
-        <a class="abstract-title" href="/2017/08/03/Xcode集成O-LLVM/">
+        <a class="abstract-title" href="/2019/06/27/2019-06-27/">
             
-                <span>Xcode集成O-LLVM</span>
+                <span>GCD线程管理从入门到放弃</span>
         </a>
         <div class="abstract-content">
-            要在Xcode中使用O-LLVM，必须要编写一个Xcode插件。
-首先
-12345$ cd /Applications/Xcode.app/Contents/PlugIns/Xcode3Core.ideplugin/Contents/SharedSupport/Developer/Library/Xcode/Plug-ins/$ sudo cp -r Clang\ LLVM\ 1.0.xcplugin/ Obfuscator.xcplugin$ cd Obfuscator.xcplugin/Contents/$ sudo plutil -convert xml1 Info.plist$ ...
+            源头刚敲完一波业务代码，脑子里突然传来一个想法，对象一般能自动销毁，线程也同样也会被自动回收，那这个自动回收是怎么做到的呢？心动不如行动，先找GCD的源码libdispatch，这里用的是libdispatch-1008.200.78.tar.gz版本。
+平时如果需要用到多线程，想必大家都是这样的一套基本操作：
+123dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^&#123;        &#125;);
+那这一条熟的不能再熟的代码里都藏着一系列什么样的操作？
+likely(...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/08/03</span>
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/06/27</span>
             </div>
             <!-- tags  -->
             
             <div class="abstract-tags">
     
-        <a class="post-tag" href="javascript:void(0);" data-tags="O-LLVM">O-LLVM</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="gcd">gcd</a>
     
 </div>
             
