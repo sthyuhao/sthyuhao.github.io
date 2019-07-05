@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="余果">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="余果">
+    
+    <meta name="keywords" content="iOS,OC,Objective-C">
+    
+    <meta name="description" content>
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>余果的博客</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="stylesheet" href="/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href="/images/logo.png">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js" as="script">
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/">余额不足.</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name"></a>
+            </div>
+    </div>
+    
+    <a class="home-link" href="/">余额不足.</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            [Untitled Post]
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">1.2k</span>阅读时长: <span class="post-count reading-time">6 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2019/07/04</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <hr>
+<p>title: GCD线程管理（内核相关）<br>date: 2019-07-04 20:08:00<br>categories:</p>
+<pre><code>- 多线程
+</code></pre><p>tags:</p>
+<pre><code>- gcd
+</code></pre><p>description: </p>
+<h2 id="comments-true"><a href="#comments-true" class="headerlink" title="comments: true"></a>comments: true</h2><h2 id="pthread-wqthread"><a href="#pthread-wqthread" class="headerlink" title="pthread_wqthread()"></a>pthread_wqthread()</h2><p>接上文<a href="https://yebz.fun/2019/06/27/2019-06-27/" target="_blank" rel="noopener">GCD线程管理从入门到放弃</a></p>
+<p>从上文的分析我们了解到了内核的调用链如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">start_wqthread -&gt; _pthread_wqthread -&gt;_dispatch_worker_thread2 -&gt;_dispatch_root_queue_drain </span><br><span class="line">-&gt;_dispatch_queue_override_invoke -&gt;_dispatch_client_callout </span><br><span class="line">-&gt; _dispatch_call_block_and_release</span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line">_pthread_wqthread() 太长可绕过直接看分析</span><br><span class="line"><span class="keyword">void</span></span><br><span class="line">_pthread_wqthread(<span class="keyword">pthread_t</span> self, <span class="keyword">mach_port_t</span> kport, <span class="keyword">void</span> *stacklowaddr,</span><br><span class="line">		<span class="keyword">void</span> *keventlist, <span class="keyword">int</span> flags, <span class="keyword">int</span> nkevents)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span> ((flags &amp; WQ_FLAG_THREAD_REUSE) == <span class="number">0</span>) &#123;</span><br><span class="line">		_pthread_wqthread_setup(self, kport, stacklowaddr, flags);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">pthread_priority_t</span> pp;</span><br><span class="line">	<span class="keyword">if</span> (flags &amp; WQ_FLAG_THREAD_OUTSIDEQOS) &#123;</span><br><span class="line">		self-&gt;wqoutsideqos = <span class="number">1</span>;</span><br><span class="line">		pp = _pthread_priority_make_from_thread_qos(THREAD_QOS_LEGACY, <span class="number">0</span>,</span><br><span class="line">				_PTHREAD_PRIORITY_FALLBACK_FLAG);</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		self-&gt;wqoutsideqos = <span class="number">0</span>;</span><br><span class="line">		pp = _pthread_wqthread_priority(flags);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	self-&gt;tsd[_PTHREAD_TSD_SLOT_PTHREAD_QOS_CLASS] = (<span class="keyword">void</span> *)pp;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// avoid spills on the stack hard to keep used stack space minimal</span></span><br><span class="line">	<span class="keyword">if</span> (nkevents == WORKQ_EXIT_THREAD_NKEVENT) &#123;</span><br><span class="line">		<span class="keyword">goto</span> <span class="built_in">exit</span>;</span><br><span class="line">	&#125; <span class="keyword">else</span> <span class="keyword">if</span> (flags &amp; WQ_FLAG_THREAD_WORKLOOP) &#123;</span><br><span class="line">		self-&gt;fun = (<span class="keyword">void</span> *(*)(<span class="keyword">void</span>*))__libdispatch_workloopfunction;</span><br><span class="line">		self-&gt;wq_retop = WQOPS_THREAD_WORKLOOP_RETURN;</span><br><span class="line">		self-&gt;wq_kqid_ptr = ((<span class="keyword">kqueue_id_t</span> *)keventlist - <span class="number">1</span>);</span><br><span class="line">		self-&gt;arg = keventlist;</span><br><span class="line">		self-&gt;wq_nevents = nkevents;</span><br><span class="line">	&#125; <span class="keyword">else</span> <span class="keyword">if</span> (flags &amp; WQ_FLAG_THREAD_KEVENT) &#123;</span><br><span class="line">		self-&gt;fun = (<span class="keyword">void</span> *(*)(<span class="keyword">void</span>*))__libdispatch_keventfunction;</span><br><span class="line">		self-&gt;wq_retop = WQOPS_THREAD_KEVENT_RETURN;</span><br><span class="line">		self-&gt;wq_kqid_ptr = <span class="literal">NULL</span>;</span><br><span class="line">		self-&gt;arg = keventlist;</span><br><span class="line">		self-&gt;wq_nevents = nkevents;</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		self-&gt;fun = (<span class="keyword">void</span> *(*)(<span class="keyword">void</span>*))__libdispatch_workerfunction;</span><br><span class="line">		self-&gt;wq_retop = WQOPS_THREAD_RETURN;</span><br><span class="line">		self-&gt;wq_kqid_ptr = <span class="literal">NULL</span>;</span><br><span class="line">		self-&gt;arg = (<span class="keyword">void</span> *)(<span class="keyword">uintptr_t</span>)pp;</span><br><span class="line">		self-&gt;wq_nevents = <span class="number">0</span>;</span><br><span class="line">		<span class="keyword">if</span> (os_likely(__workq_newapi)) &#123;</span><br><span class="line">			(*__libdispatch_workerfunction)(pp);</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			_pthread_wqthread_legacy_worker_wrap(pp);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">goto</span> just_return;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">if</span> (nkevents &gt; <span class="number">0</span>) &#123;</span><br><span class="line">kevent_errors_retry:</span><br><span class="line">		<span class="keyword">if</span> (self-&gt;wq_retop == WQOPS_THREAD_WORKLOOP_RETURN) &#123;</span><br><span class="line">			((<span class="keyword">pthread_workqueue_function_workloop_t</span>)self-&gt;fun)(self-&gt;wq_kqid_ptr, &amp;self-&gt;arg, &amp;self-&gt;wq_nevents);</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			((<span class="keyword">pthread_workqueue_function_kevent_t</span>)self-&gt;fun)</span><br><span class="line">					(&amp;self-&gt;arg, &amp;self-&gt;wq_nevents);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">int</span> rc = __workq_kernreturn(self-&gt;wq_retop, self-&gt;arg, self-&gt;wq_nevents, <span class="number">0</span>);</span><br><span class="line">		<span class="keyword">if</span> (os_unlikely(rc &gt; <span class="number">0</span>)) &#123;</span><br><span class="line">			self-&gt;wq_nevents = rc;</span><br><span class="line">			<span class="keyword">goto</span> kevent_errors_retry;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> (os_unlikely(rc &lt; <span class="number">0</span>)) &#123;</span><br><span class="line">			PTHREAD_INTERNAL_CRASH(self-&gt;err_no, <span class="string">"kevent (workloop) failed"</span>);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">just_return:</span><br><span class="line">		__workq_kernreturn(self-&gt;wq_retop, <span class="literal">NULL</span>, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">exit</span>:</span><br><span class="line">	_pthread_wqthread_exit(self);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们只分析我们关心的代码，直接忽略异常代码。<br>首先进入<code>WQ_FLAG_THREAD_WORKLOOP</code>流程，将<code>__libdispatch_workloopfunction</code>等参数赋予<code>self(就是pthread)</code>，然后进入<code>kevent_errors_retry：</code>，调用<code>self-&gt;fun()</code>即<code>((pthread_workqueue_function_workloop_t)self-&gt;fun)(self-&gt;wq_kqid_ptr, &amp;self-&gt;arg, &amp;self-&gt;wq_nevents);</code>，然后调用<code>__workq_kernreturn(self-&gt;wq_retop, self-&gt;arg, self-&gt;wq_nevents, 0);</code>。<br>到这<code>_pthread_wqthread()</code>的任务派发结束，派发出去的<code>func</code>想必就是<code>_dispatch_worker_thread2</code>了。</p>
+<p>然后回到<code>libdispatch.dylib</code></p>
+<h2 id="dispatch-introspection-thread-add"><a href="#dispatch-introspection-thread-add" class="headerlink" title="dispatch_introspection_thread_add()"></a>dispatch_introspection_thread_add()</h2><p>先说说<code>dispatch_introspection_thread_add()</code>这个方法，因为<code>dispatch_worker_thread2()</code>有调用他</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span></span><br><span class="line">_dispatch_introspection_thread_add(<span class="keyword">void</span>)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span> (_dispatch_thread_getspecific(dispatch_introspection_key)) &#123;</span><br><span class="line">		<span class="keyword">return</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">uintptr_t</span> thread = _dispatch_thread_self();</span><br><span class="line">	<span class="keyword">dispatch_introspection_thread_t</span> dit = (<span class="keyword">void</span>*)_dispatch_continuation_alloc();</span><br><span class="line">	dit-&gt;dit_isa = (<span class="keyword">void</span>*)<span class="number">0x41</span>;</span><br><span class="line">	dit-&gt;thread = (<span class="keyword">void</span>*)thread;</span><br><span class="line">	dit-&gt;<span class="built_in">queue</span> = !_dispatch_introspection.thread_queue_offset ? <span class="literal">NULL</span> :</span><br><span class="line">			(<span class="keyword">void</span>*)thread + _dispatch_introspection.thread_queue_offset;</span><br><span class="line">	</span><br><span class="line">	_dispatch_thread_setspecific(dispatch_introspection_key, dit);</span><br><span class="line">	_dispatch_unfair_lock_lock(&amp;_dispatch_introspection.threads_lock);</span><br><span class="line">	LIST_INSERT_HEAD(&amp;_dispatch_introspection.threads, dit, dit_list);</span><br><span class="line">	_dispatch_unfair_lock_unlock(&amp;_dispatch_introspection.threads_lock);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个方法名从字面上理解是在内部添加一个thread，方法体内部首先初始化了一个<code>dispatch_introspection_thread_t</code>对象，然后进行赋值。注意，在<code>LIST_INSERT_HEAD()</code>也就是顶部插入dit操作之前有个加锁操作。实际上该方法可以简单的认为是将队列与线程塞进了一个字典里。</p>
+<h2 id="dispatch-worker-thread2"><a href="#dispatch-worker-thread2" class="headerlink" title="dispatch_worker_thread2()"></a>dispatch_worker_thread2()</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">void</span></span><br><span class="line">_dispatch_worker_thread2(<span class="keyword">pthread_priority_t</span> pp)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">bool</span> overcommit = pp &amp; _PTHREAD_PRIORITY_OVERCOMMIT_FLAG;</span><br><span class="line">	<span class="keyword">dispatch_queue_global_t</span> dq;</span><br><span class="line"></span><br><span class="line">	pp &amp;= _PTHREAD_PRIORITY_OVERCOMMIT_FLAG | ~_PTHREAD_PRIORITY_FLAGS_MASK;</span><br><span class="line">	_dispatch_thread_setspecific(dispatch_priority_key, (<span class="keyword">void</span> *)(<span class="keyword">uintptr_t</span>)pp);</span><br><span class="line">	dq = _dispatch_get_root_queue(_dispatch_qos_from_pp(pp), overcommit);</span><br><span class="line"></span><br><span class="line">	_dispatch_introspection_thread_add();</span><br><span class="line">	_dispatch_trace_runtime_event(worker_unpark, dq, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">int</span> pending = os_atomic_dec2o(dq, dgq_pending, relaxed);</span><br><span class="line">	dispatch_assert(pending &gt;= <span class="number">0</span>);</span><br><span class="line">	_dispatch_root_queue_drain(dq, dq-&gt;dq_priority,</span><br><span class="line">			DISPATCH_INVOKE_WORKER_DRAIN | DISPATCH_INVOKE_REDIRECTING_DRAIN);</span><br><span class="line">	_dispatch_voucher_debug(<span class="string">"root queue clear"</span>, <span class="literal">NULL</span>);</span><br><span class="line">	_dispatch_reset_voucher(<span class="literal">NULL</span>, DISPATCH_THREAD_PARK);</span><br><span class="line">	_dispatch_trace_runtime_event(worker_park, <span class="literal">NULL</span>, <span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line">``` </span><br><span class="line">从`root_queue`中取出`global_queue`,然后触发了`_dispatch_introspection_thread_add()`操作往`dit_list`添加一个线程，接着就调用了`_dispatch_root_queue_drain()`。</span><br><span class="line"></span><br><span class="line">## dispatch_root_queue_drain()</span><br><span class="line"></span><br><span class="line">``` c</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">void</span></span><br><span class="line">_dispatch_root_queue_drain(<span class="keyword">dispatch_queue_global_t</span> dq,</span><br><span class="line">		<span class="keyword">dispatch_priority_t</span> pri, <span class="keyword">dispatch_invoke_flags_t</span> flags)</span><br><span class="line">&#123;</span><br><span class="line">	_dispatch_queue_set_current(dq);</span><br><span class="line">	_dispatch_init_basepri(pri);</span><br><span class="line">	_dispatch_adopt_wlh_anon();</span><br><span class="line"></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">dispatch_object_s</span> *<span class="title">item</span>;</span></span><br><span class="line">	<span class="keyword">bool</span> reset = <span class="literal">false</span>;</span><br><span class="line">	dispatch_invoke_context_s dic = &#123; &#125;;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> DISPATCH_COCOA_COMPAT</span></span><br><span class="line">	_dispatch_last_resort_autorelease_pool_push(&amp;dic);</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span> <span class="comment">// DISPATCH_COCOA_COMPAT</span></span></span><br><span class="line">	_dispatch_queue_drain_init_narrowing_check_deadline(&amp;dic, pri);</span><br><span class="line">	_dispatch_perfmon_start();</span><br><span class="line">	<span class="keyword">while</span> (likely(item = _dispatch_root_queue_drain_one(dq))) &#123;</span><br><span class="line">		<span class="keyword">if</span> (reset) _dispatch_wqthread_override_reset();</span><br><span class="line">		_dispatch_continuation_pop_inline(item, &amp;dic, flags, dq);</span><br><span class="line">		reset = _dispatch_reset_basepri_override();</span><br><span class="line">		<span class="keyword">if</span> (unlikely(_dispatch_queue_drain_should_narrow(&amp;dic))) &#123;</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// overcommit or not. worker thread</span></span><br><span class="line">	<span class="keyword">if</span> (pri &amp; DISPATCH_PRIORITY_FLAG_OVERCOMMIT) &#123;</span><br><span class="line">		_dispatch_perfmon_end(perfmon_thread_worker_oc);</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		_dispatch_perfmon_end(perfmon_thread_worker_non_oc);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> DISPATCH_COCOA_COMPAT</span></span><br><span class="line">	_dispatch_last_resort_autorelease_pool_pop(&amp;dic);</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span> <span class="comment">// DISPATCH_COCOA_COMPAT</span></span></span><br><span class="line">	_dispatch_reset_wlh();</span><br><span class="line">	_dispatch_clear_basepri();</span><br><span class="line">	_dispatch_queue_set_current(<span class="literal">NULL</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>循环从队列头部中取出任务，然后执行<code>_dispatch_continuation_pop_inline()</code></p>
+<h2 id="dispatch-continuation-pop-inline"><a href="#dispatch-continuation-pop-inline" class="headerlink" title="dispatch_continuation_pop_inline()"></a>dispatch_continuation_pop_inline()</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">inline</span> <span class="keyword">void</span></span><br><span class="line">_dispatch_continuation_pop_inline(<span class="keyword">dispatch_object_t</span> dou,</span><br><span class="line">		<span class="keyword">dispatch_invoke_context_t</span> dic, <span class="keyword">dispatch_invoke_flags_t</span> flags,</span><br><span class="line">		<span class="keyword">dispatch_queue_class_t</span> dqu)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">dispatch_pthread_root_queue_observer_hooks_t</span> observer_hooks =</span><br><span class="line">			_dispatch_get_pthread_root_queue_observer_hooks();</span><br><span class="line">	<span class="keyword">if</span> (observer_hooks) observer_hooks-&gt;queue_will_execute(dqu._dq);</span><br><span class="line">	flags &amp;= _DISPATCH_INVOKE_PROPAGATE_MASK;</span><br><span class="line">	<span class="keyword">if</span> (_dispatch_object_has_vtable(dou)) &#123;</span><br><span class="line">		dx_invoke(dou._dq, dic, flags);</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		_dispatch_continuation_invoke_inline(dou, flags, dqu);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> (observer_hooks) observer_hooks-&gt;queue_did_execute(dqu._dq);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>判断是否有<code>vtable</code>,从上文我们知道<code>dispatch_async()</code>调用<code>dx_push()</code>会触发<code>dx_vtable(x)-&gt;dq_push(x, y, z)</code>，这里应该意味着队列拥有<code>vtable</code>成员，根据源码追溯<code>dx_invoke()</code>调用<code>do_invoke()</code>，那么<code>do_invoke()</code>会调用哪个函数就有说法了，这里也就不去补细节了，<code>do_invoke()</code>在全局并发队列的条件下会调用<code>_dispatch_queue_override_invoke()</code></p>
+<h2 id="dispatch-queue-override-invoke"><a href="#dispatch-queue-override-invoke" class="headerlink" title="dispatch_queue_override_invoke()"></a>dispatch_queue_override_invoke()</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">void</span></span><br><span class="line">_dispatch_queue_override_invoke(<span class="keyword">dispatch_continuation_t</span> dc,</span><br><span class="line">		<span class="keyword">dispatch_invoke_context_t</span> dic, <span class="keyword">dispatch_invoke_flags_t</span> flags)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">dispatch_queue_t</span> old_rq = _dispatch_queue_get_current();</span><br><span class="line">	<span class="keyword">dispatch_queue_global_t</span> assumed_rq = dc-&gt;dc_other;</span><br><span class="line">	<span class="keyword">dispatch_priority_t</span> old_dp;</span><br><span class="line">	<span class="keyword">dispatch_object_t</span> dou;</span><br><span class="line">	<span class="keyword">uintptr_t</span> dc_flags = DC_FLAG_CONSUME;</span><br><span class="line"></span><br><span class="line">	dou._do = dc-&gt;dc_data;</span><br><span class="line">	old_dp = _dispatch_root_queue_identity_assume(assumed_rq);</span><br><span class="line">	<span class="keyword">if</span> (dc_type(dc) == DISPATCH_CONTINUATION_TYPE(OVERRIDE_STEALING)) &#123;</span><br><span class="line">		flags |= DISPATCH_INVOKE_STEALING;</span><br><span class="line">		dc_flags |= DC_FLAG_NO_INTROSPECTION;</span><br><span class="line">	&#125;</span><br><span class="line">	_dispatch_continuation_pop_forwarded(dc, dc_flags, assumed_rq, &#123;</span><br><span class="line">		<span class="keyword">if</span> (_dispatch_object_has_vtable(dou._do)) &#123;</span><br><span class="line">			dx_invoke(dou._dq, dic, flags);</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			_dispatch_continuation_invoke_inline(dou, flags, assumed_rq);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;);</span><br><span class="line">	_dispatch_reset_basepri(old_dp);</span><br><span class="line">	_dispatch_queue_set_current(old_rq);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果按照正常的流程走下来，这里的<code>dou</code>应该是个任务而不再是队列了，调用流程将走进<code>_dispatch_continuation_invoke_inline()</code></p>
+<h2 id="dispatch-continuation-invoke-inline"><a href="#dispatch-continuation-invoke-inline" class="headerlink" title="dispatch_continuation_invoke_inline()"></a>dispatch_continuation_invoke_inline()</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">inline</span> <span class="keyword">void</span></span><br><span class="line">_dispatch_continuation_invoke_inline(<span class="keyword">dispatch_object_t</span> dou,</span><br><span class="line">		<span class="keyword">dispatch_invoke_flags_t</span> flags, <span class="keyword">dispatch_queue_class_t</span> dqu)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">dispatch_continuation_t</span> dc = dou._dc, dc1;</span><br><span class="line">	dispatch_invoke_with_autoreleasepool(flags, &#123;</span><br><span class="line">		...</span><br><span class="line">		<span class="keyword">if</span> (unlikely(dc_flags &amp; DC_FLAG_GROUP_ASYNC)) &#123;</span><br><span class="line">			_dispatch_continuation_with_group_invoke(dc);</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			_dispatch_client_callout(dc-&gt;dc_ctxt, dc-&gt;dc_func);</span><br><span class="line">			_dispatch_trace_item_complete(dc);</span><br><span class="line">		&#125;</span><br><span class="line">		...</span><br><span class="line">	&#125;);</span><br><span class="line">	_dispatch_perfmon_workitem_inc();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>因为我们分析的是<code>dispatch_async()</code>,所以走<code>_dispatch_client_callout()</code>,而callout函数就是执行了了队列中的block任务。</p>
+<p>一通胡乱的分析之后终于看明白了任务的调度执行流程，也明确了异步任务的执行顺序，但是距离理解GCD的工作流程还是差得很远。</p>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>发表日期：<a href="http://yoursite.com/2019/07/04/2019-07-04/">July 4th 2019, 8:07:32 pm</a>
+            </p><p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2019/06/27/2019-06-27/" title="GCD线程管理从入门到放弃">
+                    <div class="prevTitle">GCD线程管理从入门到放弃</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    <div id="disqus_thread"></div>
+    <script>
+        /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+        
+        var disqus_config = function () {
+        this.page.url = "http://yoursite.com/2019/07/04/2019-07-04/";  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = ""; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        };
+        
+        (function () { // DON'T EDIT BELOW THIS LINE
+            var d = document, s = d.createElement('script');
+            s.src = 'https://sthyuhao.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+    
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:sthyuhao@126.com" class="iconfont-archer email" title="email"></a>
+            
+        
+    
+        
+            
+                <a href="https://github.com/sthyuhao" class="iconfont-archer github" target="_blank" title="github"></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#comments-true"><span class="toc-number">1.</span> <span class="toc-text">comments: true</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pthread-wqthread"><span class="toc-number">2.</span> <span class="toc-text">pthread_wqthread()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dispatch-introspection-thread-add"><span class="toc-number">3.</span> <span class="toc-text">dispatch_introspection_thread_add()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dispatch-worker-thread2"><span class="toc-number">4.</span> <span class="toc-text">dispatch_worker_thread2()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dispatch-continuation-pop-inline"><span class="toc-number">5.</span> <span class="toc-text">dispatch_continuation_pop_inline()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dispatch-queue-override-invoke"><span class="toc-number">6.</span> <span class="toc-text">dispatch_queue_override_invoke()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dispatch-continuation-invoke-inline"><span class="toc-number">7.</span> <span class="toc-text">dispatch_continuation_invoke_inline()</span></a></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 13
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2019 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/27</span><a class="archive-post-title" href="/2019/06/27/2019-06-27/">GCD线程管理从入门到放弃</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/20</span><a class="archive-post-title" href="/2019/03/20/2019-03-20/">扒一扒Category以及关联对象</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/13</span><a class="archive-post-title" href="/2019/02/13/2019-02-13/">年初的一些感慨</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/21</span><a class="archive-post-title" href="/2018/12/21/2018-12-21/">集成Hikari问题汇总</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/12</span><a class="archive-post-title" href="/2018/11/12/2018-11-12/">解析__block</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/01</span><a class="archive-post-title" href="/2018/11/01/2018-10-31/">从源码分析Block的内存管理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/19</span><a class="archive-post-title" href="/2018/10/19/2018-10-19/">weak到底做了些啥？</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/19</span><a class="archive-post-title" href="/2018/07/19/initialize使用不当造成的问题/">initialize使用不当造成的问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/17</span><a class="archive-post-title" href="/2018/04/17/一次逆向mac微信过程记录/">一次逆向mac微信过程记录（自动添加群聊好友）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/11</span><a class="archive-post-title" href="/2018/04/11/记录一次APP启动优化/">记录一次APP启动优化</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2017 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/03</span><a class="archive-post-title" href="/2017/08/03/Xcode集成O-LLVM/">Xcode集成O-LLVM</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/15</span><a class="archive-post-title" href="/2017/05/15/LLVM与Clang的一些事儿/">LLVM与Clang的一些事儿</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> Invalid date </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">Invalid date</span><a class="archive-post-title" href="/2019/07/04/2019-07-04/">[Untitled Post]</a>
+        </li>
+    
+    </ul></div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="block"><span class="iconfont-archer">&#xe606;</span>block</span>
+    
+        <span class="sidebar-tag-name" data-tags="LLVM"><span class="iconfont-archer">&#xe606;</span>LLVM</span>
+    
+        <span class="sidebar-tag-name" data-tags="随笔杂谈"><span class="iconfont-archer">&#xe606;</span>随笔杂谈</span>
+    
+        <span class="sidebar-tag-name" data-tags="O-LLVM"><span class="iconfont-archer">&#xe606;</span>O-LLVM</span>
+    
+        <span class="sidebar-tag-name" data-tags="逆向"><span class="iconfont-archer">&#xe606;</span>逆向</span>
+    
+        <span class="sidebar-tag-name" data-tags="优化"><span class="iconfont-archer">&#xe606;</span>优化</span>
+    
+        <span class="sidebar-tag-name" data-tags="weak"><span class="iconfont-archer">&#xe606;</span>weak</span>
+    
+        <span class="sidebar-tag-name" data-tags="Category"><span class="iconfont-archer">&#xe606;</span>Category</span>
+    
+        <span class="sidebar-tag-name" data-tags="gcd"><span class="iconfont-archer">&#xe606;</span>gcd</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br>
+    1、请确保node版本大于6.2<br>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="block"><span class="iconfont-archer">&#xe60a;</span>block</span>
+    
+        <span class="sidebar-category-name" data-categories="混淆"><span class="iconfont-archer">&#xe60a;</span>混淆</span>
+    
+        <span class="sidebar-category-name" data-categories="随笔杂谈"><span class="iconfont-archer">&#xe60a;</span>随笔杂谈</span>
+    
+        <span class="sidebar-category-name" data-categories="LLVM"><span class="iconfont-archer">&#xe60a;</span>LLVM</span>
+    
+        <span class="sidebar-category-name" data-categories="逆向"><span class="iconfont-archer">&#xe60a;</span>逆向</span>
+    
+        <span class="sidebar-category-name" data-categories="优化"><span class="iconfont-archer">&#xe60a;</span>优化</span>
+    
+        <span class="sidebar-category-name" data-categories="内存管理"><span class="iconfont-archer">&#xe60a;</span>内存管理</span>
+    
+        <span class="sidebar-category-name" data-categories="Category"><span class="iconfont-archer">&#xe60a;</span>Category</span>
+    
+        <span class="sidebar-category-name" data-categories="多线程"><span class="iconfont-archer">&#xe60a;</span>多线程</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "余果"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+
