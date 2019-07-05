@@ -359,6 +359,37 @@ height:50vh;
     
     
     <article class="index-post">
+        <a class="abstract-title" href="/2019/07/04/2019-07-04/">
+            
+                <span>GCD线程管理-内核相关</span>
+        </a>
+        <div class="abstract-content">
+            pthread_wqthread()从上文的分析我们了解到了内核的调用链如下：
+123start_wqthread -&gt; _pthread_wqthread -&gt;_dispatch_worker_thread2 -&gt;_dispatch_root_queue_drain -&gt;_dispatch_queue_override_invoke -&gt;_dispatch_client_callout -&gt; _dispatch_call_block_and_release
+12345678910111213141516171819202122232425262728...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/07/04</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class="abstract-tags">
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="Category">Category</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href="/2019/06/27/2019-06-27/">
             
                 <span>GCD线程管理从入门到放弃</span>
@@ -399,37 +430,6 @@ likely(...
         <div class="abstract-content">
             从结构说起源码来自objc4-750
 1234567891011121314151617struct category_t &#123;    const char *name;   //!&lt;  分类名称    classref_t cls;   //!&lt;  属于哪个类    struct method_list_t *instanceMethods;   //!&lt;  实例方法列表    struct method_list_t *classMethods;   //!&lt;  类方法列表    struct protocol_list_t *protocols;  ...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/03/20</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class="abstract-tags">
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="Category">Category</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2019/03/20/2019-07-04/">
-            
-                <span>扒一扒Category以及关联对象</span>
-        </a>
-        <div class="abstract-content">
-            pthread_wqthread()从上文的分析我们了解到了内核的调用链如下：
-123start_wqthread -&gt; _pthread_wqthread -&gt;_dispatch_worker_thread2 -&gt;_dispatch_root_queue_drain -&gt;_dispatch_queue_override_invoke -&gt;_dispatch_client_callout -&gt; _dispatch_call_block_and_release
-12345678910111213141516171819202122232425262728...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
@@ -975,17 +975,17 @@ OK，牢骚发完了，简单的说说这次逆向过程
     
     
         <li class="archive-post-item">
+            <span class="archive-post-date">07/04</span><a class="archive-post-title" href="/2019/07/04/2019-07-04/">GCD线程管理-内核相关</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
             <span class="archive-post-date">06/27</span><a class="archive-post-title" href="/2019/06/27/2019-06-27/">GCD线程管理从入门到放弃</a>
         </li>
     
     
         <li class="archive-post-item">
             <span class="archive-post-date">03/20</span><a class="archive-post-title" href="/2019/03/20/2019-03-20/">扒一扒Category以及关联对象</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">03/20</span><a class="archive-post-title" href="/2019/03/20/2019-07-04/">扒一扒Category以及关联对象</a>
         </li>
     
     
