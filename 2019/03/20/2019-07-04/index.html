@@ -22,7 +22,7 @@
     <meta name="description" content>
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>余果的博客</title>
+    <title>扒一扒Category以及关联对象 · 余果的博客</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -217,7 +217,7 @@
                 <a href="/">余额不足.</a>
             </div>
             <div class="post-title">
-                <a href="#" class="post-name"></a>
+                <a href="#" class="post-name">扒一扒Category以及关联对象</a>
             </div>
     </div>
     
@@ -247,7 +247,7 @@ height:50vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            [Untitled Post]
+            扒一扒Category以及关联对象
             <!-- 404 -->
             
         </h1>
@@ -264,6 +264,12 @@ height:50vh;
             <div class="post-intros">
                 <!-- 文章页标签  -->
                 
+                    <div class="post-intro-tags">
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="Category">Category</a>
+    
+</div>
+                
                 
                     <div class="post-intro-read">
                         <span>字数统计: <span class="post-count word-count">1.2k</span>阅读时长: <span class="post-count reading-time">6 min</span></span>
@@ -271,7 +277,7 @@ height:50vh;
                 
                 <div class="post-intro-meta">
                     <span class="post-intro-calander iconfont-archer">&#xe676;</span>
-                    <span class="post-intro-time">2019/07/04</span>
+                    <span class="post-intro-time">2019/03/20</span>
                     
                     <span id="busuanzi_container_page_pv" class="busuanzi-pv">
                         <span class="iconfont-archer">&#xe602;</span>
@@ -395,13 +401,7 @@ height:50vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <hr>
-<p>title: GCD线程管理-内核相关<br>date: 2019-07-04 20:08:01<br>categories:</p>
-<pre><code>- 多线程
-</code></pre><p>tags:</p>
-<pre><code>- gcd
-</code></pre><p>description: </p>
-<h2 id="comments-true"><a href="#comments-true" class="headerlink" title="comments: true"></a>comments: true</h2><h2 id="pthread-wqthread"><a href="#pthread-wqthread" class="headerlink" title="pthread_wqthread()"></a>pthread_wqthread()</h2><p>从上文的分析我们了解到了内核的调用链如下：</p>
+        <h2 id="pthread-wqthread"><a href="#pthread-wqthread" class="headerlink" title="pthread_wqthread()"></a>pthread_wqthread()</h2><p>从上文的分析我们了解到了内核的调用链如下：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">start_wqthread -&gt; _pthread_wqthread -&gt;_dispatch_worker_thread2 -&gt;_dispatch_root_queue_drain </span><br><span class="line">-&gt;_dispatch_queue_override_invoke -&gt;_dispatch_client_callout </span><br><span class="line">-&gt; _dispatch_call_block_and_release</span><br></pre></td></tr></table></figure>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line">_pthread_wqthread() 太长可绕过直接看分析</span><br><span class="line"><span class="keyword">void</span></span><br><span class="line">_pthread_wqthread(<span class="keyword">pthread_t</span> self, <span class="keyword">mach_port_t</span> kport, <span class="keyword">void</span> *stacklowaddr,</span><br><span class="line">		<span class="keyword">void</span> *keventlist, <span class="keyword">int</span> flags, <span class="keyword">int</span> nkevents)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span> ((flags &amp; WQ_FLAG_THREAD_REUSE) == <span class="number">0</span>) &#123;</span><br><span class="line">		_pthread_wqthread_setup(self, kport, stacklowaddr, flags);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">pthread_priority_t</span> pp;</span><br><span class="line">	<span class="keyword">if</span> (flags &amp; WQ_FLAG_THREAD_OUTSIDEQOS) &#123;</span><br><span class="line">		self-&gt;wqoutsideqos = <span class="number">1</span>;</span><br><span class="line">		pp = _pthread_priority_make_from_thread_qos(THREAD_QOS_LEGACY, <span class="number">0</span>,</span><br><span class="line">				_PTHREAD_PRIORITY_FALLBACK_FLAG);</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		self-&gt;wqoutsideqos = <span class="number">0</span>;</span><br><span class="line">		pp = _pthread_wqthread_priority(flags);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	self-&gt;tsd[_PTHREAD_TSD_SLOT_PTHREAD_QOS_CLASS] = (<span class="keyword">void</span> *)pp;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// avoid spills on the stack hard to keep used stack space minimal</span></span><br><span class="line">	<span class="keyword">if</span> (nkevents == WORKQ_EXIT_THREAD_NKEVENT) &#123;</span><br><span class="line">		<span class="keyword">goto</span> <span class="built_in">exit</span>;</span><br><span class="line">	&#125; <span class="keyword">else</span> <span class="keyword">if</span> (flags &amp; WQ_FLAG_THREAD_WORKLOOP) &#123;</span><br><span class="line">		self-&gt;fun = (<span class="keyword">void</span> *(*)(<span class="keyword">void</span>*))__libdispatch_workloopfunction;</span><br><span class="line">		self-&gt;wq_retop = WQOPS_THREAD_WORKLOOP_RETURN;</span><br><span class="line">		self-&gt;wq_kqid_ptr = ((<span class="keyword">kqueue_id_t</span> *)keventlist - <span class="number">1</span>);</span><br><span class="line">		self-&gt;arg = keventlist;</span><br><span class="line">		self-&gt;wq_nevents = nkevents;</span><br><span class="line">	&#125; <span class="keyword">else</span> <span class="keyword">if</span> (flags &amp; WQ_FLAG_THREAD_KEVENT) &#123;</span><br><span class="line">		self-&gt;fun = (<span class="keyword">void</span> *(*)(<span class="keyword">void</span>*))__libdispatch_keventfunction;</span><br><span class="line">		self-&gt;wq_retop = WQOPS_THREAD_KEVENT_RETURN;</span><br><span class="line">		self-&gt;wq_kqid_ptr = <span class="literal">NULL</span>;</span><br><span class="line">		self-&gt;arg = keventlist;</span><br><span class="line">		self-&gt;wq_nevents = nkevents;</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		self-&gt;fun = (<span class="keyword">void</span> *(*)(<span class="keyword">void</span>*))__libdispatch_workerfunction;</span><br><span class="line">		self-&gt;wq_retop = WQOPS_THREAD_RETURN;</span><br><span class="line">		self-&gt;wq_kqid_ptr = <span class="literal">NULL</span>;</span><br><span class="line">		self-&gt;arg = (<span class="keyword">void</span> *)(<span class="keyword">uintptr_t</span>)pp;</span><br><span class="line">		self-&gt;wq_nevents = <span class="number">0</span>;</span><br><span class="line">		<span class="keyword">if</span> (os_likely(__workq_newapi)) &#123;</span><br><span class="line">			(*__libdispatch_workerfunction)(pp);</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			_pthread_wqthread_legacy_worker_wrap(pp);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">goto</span> just_return;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">if</span> (nkevents &gt; <span class="number">0</span>) &#123;</span><br><span class="line">kevent_errors_retry:</span><br><span class="line">		<span class="keyword">if</span> (self-&gt;wq_retop == WQOPS_THREAD_WORKLOOP_RETURN) &#123;</span><br><span class="line">			((<span class="keyword">pthread_workqueue_function_workloop_t</span>)self-&gt;fun)(self-&gt;wq_kqid_ptr, &amp;self-&gt;arg, &amp;self-&gt;wq_nevents);</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			((<span class="keyword">pthread_workqueue_function_kevent_t</span>)self-&gt;fun)</span><br><span class="line">					(&amp;self-&gt;arg, &amp;self-&gt;wq_nevents);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">int</span> rc = __workq_kernreturn(self-&gt;wq_retop, self-&gt;arg, self-&gt;wq_nevents, <span class="number">0</span>);</span><br><span class="line">		<span class="keyword">if</span> (os_unlikely(rc &gt; <span class="number">0</span>)) &#123;</span><br><span class="line">			self-&gt;wq_nevents = rc;</span><br><span class="line">			<span class="keyword">goto</span> kevent_errors_retry;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> (os_unlikely(rc &lt; <span class="number">0</span>)) &#123;</span><br><span class="line">			PTHREAD_INTERNAL_CRASH(self-&gt;err_no, <span class="string">"kevent (workloop) failed"</span>);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">just_return:</span><br><span class="line">		__workq_kernreturn(self-&gt;wq_retop, <span class="literal">NULL</span>, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">exit</span>:</span><br><span class="line">	_pthread_wqthread_exit(self);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>我们只分析我们关心的代码，直接忽略异常代码。<br>首先进入<code>WQ_FLAG_THREAD_WORKLOOP</code>流程，将<code>__libdispatch_workloopfunction</code>等参数赋予<code>self(就是pthread)</code>，然后进入<code>kevent_errors_retry：</code>，调用<code>self-&gt;fun()</code>即<code>((pthread_workqueue_function_workloop_t)self-&gt;fun)(self-&gt;wq_kqid_ptr, &amp;self-&gt;arg, &amp;self-&gt;wq_nevents);</code>，然后调用<code>__workq_kernreturn(self-&gt;wq_retop, self-&gt;arg, self-&gt;wq_nevents, 0);</code>。<br>到这<code>_pthread_wqthread()</code>的任务派发结束，派发出去的<code>func</code>想必就是<code>_dispatch_worker_thread2</code>了。</p>
@@ -423,7 +423,7 @@ height:50vh;
     <!-- license  -->
     
         <div class="license-wrapper">
-            <p>发表日期：<a href="http://yoursite.com/2019/07/04/2019-07-04/">July 4th 2019, 8:07:32 pm</a>
+            <p>发表日期：<a href="http://yoursite.com/2019/03/20/2019-07-04/">March 20th 2019, 10:23:47 am</a>
             </p><p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -431,12 +431,17 @@ height:50vh;
     <ul class="post-paginator">
         <li class="next">
             
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2019/03/20/2019-03-20/" title="扒一扒Category以及关联对象">
+                    <div class="nextTitle">扒一扒Category以及关联对象</div>
+                </a>
+            
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href="/2019/06/27/2019-06-27/" title="GCD线程管理从入门到放弃">
-                    <div class="prevTitle">GCD线程管理从入门到放弃</div>
+                <a href="/2019/02/13/2019-02-13/" title="年初的一些感慨">
+                    <div class="prevTitle">年初的一些感慨</div>
                 </a>
             
         </li>
@@ -453,8 +458,8 @@ height:50vh;
     *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
         
         var disqus_config = function () {
-        this.page.url = "http://yoursite.com/2019/07/04/2019-07-04/";  // Replace PAGE_URL with your page's canonical URL variable
-        this.page.identifier = ""; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        this.page.url = "http://yoursite.com/2019/03/20/2019-07-04/";  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = "扒一扒Category以及关联对象"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
         };
         
         (function () { // DON'T EDIT BELOW THIS LINE
@@ -569,7 +574,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#comments-true"><span class="toc-number">1.</span> <span class="toc-text">comments: true</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pthread-wqthread"><span class="toc-number">2.</span> <span class="toc-text">pthread_wqthread()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dispatch-introspection-thread-add"><span class="toc-number">3.</span> <span class="toc-text">dispatch_introspection_thread_add()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dispatch-worker-thread2"><span class="toc-number">4.</span> <span class="toc-text">dispatch_worker_thread2()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dispatch-continuation-pop-inline"><span class="toc-number">5.</span> <span class="toc-text">dispatch_continuation_pop_inline()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dispatch-queue-override-invoke"><span class="toc-number">6.</span> <span class="toc-text">dispatch_queue_override_invoke()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dispatch-continuation-invoke-inline"><span class="toc-number">7.</span> <span class="toc-text">dispatch_continuation_invoke_inline()</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#pthread-wqthread"><span class="toc-number">1.</span> <span class="toc-text">pthread_wqthread()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dispatch-introspection-thread-add"><span class="toc-number">2.</span> <span class="toc-text">dispatch_introspection_thread_add()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dispatch-worker-thread2"><span class="toc-number">3.</span> <span class="toc-text">dispatch_worker_thread2()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dispatch-continuation-pop-inline"><span class="toc-number">4.</span> <span class="toc-text">dispatch_continuation_pop_inline()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dispatch-queue-override-invoke"><span class="toc-number">5.</span> <span class="toc-text">dispatch_queue_override_invoke()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dispatch-continuation-invoke-inline"><span class="toc-number">6.</span> <span class="toc-text">dispatch_continuation_invoke_inline()</span></a></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
@@ -582,6 +587,8 @@ top:50vh;
     <div class="sidebar-content sidebar-content-show-archive">
           <div class="sidebar-panel-archives">
     <!-- 在ejs中将archive按照时间排序 -->
+    
+    
     
     
     
@@ -747,6 +754,11 @@ top:50vh;
     
     
         <li class="archive-post-item">
+            <span class="archive-post-date">03/20</span><a class="archive-post-title" href="/2019/03/20/2019-07-04/">扒一扒Category以及关联对象</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
             <span class="archive-post-date">02/13</span><a class="archive-post-title" href="/2019/02/13/2019-02-13/">年初的一些感慨</a>
         </li>
     
@@ -811,20 +823,6 @@ top:50vh;
     
         <li class="archive-post-item">
             <span class="archive-post-date">05/15</span><a class="archive-post-title" href="/2017/05/15/LLVM与Clang的一些事儿/">LLVM与Clang的一些事儿</a>
-        </li>
-    
-    
-    
-    
-    
-        </ul>
-    
-    <div class="archive-year"> Invalid date </div>
-    <ul class="year-list">
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">Invalid date</span><a class="archive-post-title" href="/2019/07/04/2019-07-04/">[Untitled Post]</a>
         </li>
     
     </ul></div>
