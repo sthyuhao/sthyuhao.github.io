@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="余果">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="余果">
+    
+    <meta name="keywords" content="iOS,OC,Objective-C">
+    
+    <meta name="description" content>
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>深入浅出RunLoop · 余果的博客</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="stylesheet" href="/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href="/images/logo.png">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js" as="script">
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/">余额不足.</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">深入浅出RunLoop</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href="/">余额不足.</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            深入浅出RunLoop
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class="post-intro-tags">
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="RunLoop">RunLoop</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">2.8k</span>阅读时长: <span class="post-count reading-time">11 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2019/08/05</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="楔子"><a href="#楔子" class="headerlink" title="楔子"></a>楔子</h1><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ViewController</span>: <span class="title">UIViewController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">viewDidLoad</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.viewDidLoad()</span><br><span class="line">        </span><br><span class="line">        <span class="type">DispatchQueue</span>.global().async &#123;</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">"1"</span>)</span><br><span class="line">            <span class="keyword">self</span>.perform(#selector(<span class="keyword">self</span>.aaa), with: <span class="literal">nil</span>)</span><br><span class="line">            <span class="keyword">self</span>.perform(#selector(<span class="keyword">self</span>.abc), with: <span class="literal">nil</span>, afterDelay: <span class="number">0</span>)</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">"4"</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@objc</span> <span class="function"><span class="keyword">func</span> <span class="title">aaa</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"2"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@objc</span> <span class="function"><span class="keyword">func</span> <span class="title">abc</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">"3"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在全局并发队列分别执行四个输出指令，问输出结果会是怎样的？会是<code>1234</code>或者<code>1243</code>吗？<br>run一下，让编译器告诉我们结果。让人大跌眼镜的是输出结果是<code>124</code>,为什么<code>abc</code>方法没有执行？而<code>aaa</code>凭什么又执行了？<br>带着疑问我们去溯源，首先是<code>func perform(_ aSelector: Selector!, with object: Any!) -&gt; Unmanaged&lt;AnyObject&gt;!</code>，该方法隶属于<code>NSObjectProtocol</code>中的协议方法，相类似的还有：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">perform</span><span class="params">(<span class="number">_</span> aSelector: Selector!)</span></span> -&gt; <span class="type">Unmanaged</span>&lt;<span class="type">AnyObject</span>&gt;!</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">perform</span><span class="params">(<span class="number">_</span> aSelector: Selector!, with object: <span class="keyword">Any</span>!)</span></span> -&gt; <span class="type">Unmanaged</span>&lt;<span class="type">AnyObject</span>&gt;!</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">perform</span><span class="params">(<span class="number">_</span> aSelector: Selector!, with object1: <span class="keyword">Any</span>!, with object2: <span class="keyword">Any</span>!)</span></span> -&gt; <span class="type">Unmanaged</span>&lt;<span class="type">AnyObject</span>&gt;!</span><br></pre></td></tr></table></figure>
+<p>而<code>NSObjectProtocol</code>中却没有<code>perform(_ aSelector: Selector, with anArgument: Any?, afterDelay delay: TimeInterval)</code>这个方法，它归属于<code>RunLoop</code>对<code>NSObject</code>的拓展中：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">NSObject</span> </span>&#123;</span><br><span class="line">    <span class="keyword">open</span> <span class="function"><span class="keyword">func</span> <span class="title">perform</span><span class="params">(<span class="number">_</span> aSelector: Selector, with anArgument: <span class="keyword">Any</span>?, afterDelay delay: TimeInterval, inModes modes: [RunLoop.Mode])</span></span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">open</span> <span class="function"><span class="keyword">func</span> <span class="title">perform</span><span class="params">(<span class="number">_</span> aSelector: Selector, with anArgument: <span class="keyword">Any</span>?, afterDelay delay: TimeInterval)</span></span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">open</span> <span class="class"><span class="keyword">class</span> <span class="title">func</span> <span class="title">cancelPreviousPerformRequests</span>(<span class="title">withTarget</span> <span class="title">aTarget</span>: <span class="title">Any</span>, <span class="title">selector</span> <span class="title">aSelector</span>: <span class="title">Selector</span>, <span class="title">object</span> <span class="title">anArgument</span>: <span class="title">Any</span>?)</span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class">    <span class="title">open</span> <span class="title">class</span> <span class="title">func</span> <span class="title">cancelPreviousPerformRequests</span>(<span class="title">withTarget</span> <span class="title">aTarget</span>: <span class="title">Any</span>)</span></span><br><span class="line"><span class="class">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>看着相似的两个方法结果却大相径庭。</p>
+<p>那要怎样操作才能让<code>3</code>也被输出出来呢？如果这四条语句是挂在主线程下执行的话是可以正常输出<code>1243</code>的，而在全局并发队列中却不能正常执行是因为子线程的RunLoop是默认没有被启动的，等于是你跟一个睡着的人说：“喂，记得打扫卫生！”，然后你就出门了，发现回家之后家里还是一团乱糟糟。所以要想让他干活，先把他叫醒：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">DispatchQueue</span>.global().async &#123;</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">"1"</span>)</span><br><span class="line">            <span class="keyword">self</span>.perform(#selector(<span class="keyword">self</span>.aaa), with: <span class="literal">nil</span>)</span><br><span class="line">            <span class="keyword">self</span>.perform(#selector(<span class="keyword">self</span>.abc), with: <span class="literal">nil</span>, afterDelay: <span class="number">0</span>)</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">"4"</span>)</span><br><span class="line">            <span class="type">RunLoop</span>.current.run()</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+<p>通过run()方法即可将子线程的runloop启动，block内的操作即可被正常执行。<br>这里的afterDelay为0的情况下并不会让程序立马执行，而是在线程的RunLoop中排队，详见<a href="https://developer.apple.com/documentation/objectivec/nsobject/1416176-performselector" target="_blank" rel="noopener">performSelector:withObject:afterDelay:</a></p>
+<h1 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h1><p>RunLoop是一个协调接收事件并安排事件能妥当处理的循环，目的是为了让当有任务需要执行时时使线程处于干活的状态，没有任务的时候就睡觉去。</p>
+<h1 id="剖析"><a href="#剖析" class="headerlink" title="剖析"></a>剖析</h1><p><img src="https://raw.githubusercontent.com/sthyuhao/BlogImgZone/master/cc35412e1354b6d5160a6fc9b79c46.jpg" alt="RunLoop结构及事件源"></p>
+<p>左边是RunLoop的循环结构，在循环中接收事件并安排合理的人员去处理该事件。<br>右边则是事件源，输入源传递异步事件，通常这些事件来自另一个线程或者不同的应用。定时器输入源传递同步事件，发生在预定时间或重复间隔。</p>
+<p>当然，仅仅能处理这些事件源还是不够强大的，RunLoop还生成了运行循环的行为通知，注册一个观察者接收这些通知在合适的位置即可轻松去处理一些你想做的事情，例如在<code>beforeSources</code>和<code>beforeWating</code>这些个时间段你可以监测到App时候有发生卡顿等功能。</p>
+<h2 id="RunLoopModes"><a href="#RunLoopModes" class="headerlink" title="RunLoopModes"></a>RunLoopModes</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">struct __CFRunLoopMode &#123;</span><br><span class="line">    CFRuntimeBase _base;</span><br><span class="line">    pthread_mutex_t _lock;	/* must have the run loop locked before locking this */</span><br><span class="line">    ...</span><br><span class="line">    CFMutableSetRef _sources0;</span><br><span class="line">    CFMutableSetRef _sources1;</span><br><span class="line">    CFMutableArrayRef _observers;</span><br><span class="line">    CFMutableArrayRef _timers;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>一个RunLoop的Mode包含了输入源、定时器以及观察者，即所谓的Source，Timer，Observer，每次RunLoop执行时都指定了一个特定的Mode,在RunLoop接收和处理事件的过程中，Observer仅仅观察和处理该Mode下的事件。</p>
+<p>比如一个TableView上集成了自动轮播控件，而当TableView滑动时自动轮播图就不会自动轮播了，原因是因为当滑动时当前RunLoop的Mode为TrackingMode，而自动轮播控件处于DefaultMode，当自动轮播图的Timer向RunLoop发送事件的时候DefaultMode处于无人接听的状态，即通知没有到位任务就没有人执行了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">CF_INLINE void __CFRunLoopModeLock(CFRunLoopModeRef rlm) &#123;</span><br><span class="line">    pthread_mutex_lock(&amp;(rlm-&gt;_lock));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在CFRunLoop的源码中发现在<code>FindMode、DoBlocks、DoObserver、DoSource0、DoSource1、DoTimer、CFRunLoopRun</code>等方法中都有对当前Mode进行加锁。即可认为当RunLoop正在执行任务时是不可切换Mode的。</p>
+<p>当你想对事件进行过滤的时候可自定义设定一个Mode用于采集你想要的事件埋点，也可在子线程中使用自定义Mode来防止低优先级的事件源在关键的时刻抢了资源。</p>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>名称</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Default</td>
+<td><div>NSDefaultRunLoopMode (Cocoa)</div><div>kCFRunLoopDefaultMode (Core Foundation)</div></td>
+<td>默认的Mode，大多数情况下应该使用该Mode开始 RunLoop并配置 input source</td>
+</tr>
+<tr>
+<td>Connection</td>
+<td>NSConnectionReplyMode (Cocoa)</td>
+<td>Cocoa将此Mode与NSConnection对象结合使用以监视回调。应该几乎利用不到这个Mode</td>
+</tr>
+<tr>
+<td>Modal</td>
+<td>NSModalPanelRunLoopMode (Cocoa)</td>
+<td>Cocoa用此Mode来标识用于模态面板的事件</td>
+</tr>
+<tr>
+<td>Event tracking</td>
+<td>NSEventTrackingRunLoopMode (Cocoa)</td>
+<td>Cocoa使用此Mode在屏幕滑动期间和其它用户界面跟踪期间限制传入事件</td>
+</tr>
+<tr>
+<td>Common modes</td>
+<td><div>NSRunLoopCommonModes (Cocoa)</div><div>kCFRunLoopCommonModes (Core Foundation)</div></td>
+<td>这是一组可配置的常用Mode。将输入源与此Mode相关联也会将其与组中的每个Mode相关联。对于Cocoa应用程序，此集合默认包括Default，Modal和Event tracking模式。Core Foundation最初只包含默认Mode。您可以使用该CFRunLoopAddCommonMode功能将自定义Mode添加到集合中。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="Quesetion"><a href="#Quesetion" class="headerlink" title="Quesetion"></a>Quesetion</h3><p>Q：这个CommonModes到底是个啥？很多文章都说他仅仅是个占位用的Mode，所以它到底属不属于一个真正的Mode？<br>A：在<code>__CFRunLoopCreate(pthread_t t)</code>中有这样的一段代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">loop-&gt;_commonModes = CFSetCreateMutable(kCFAllocatorSystemDefault, 0, &amp;kCFTypeSetCallBacks);</span><br><span class="line">CFSetAddValue(loop-&gt;_commonModes, kCFRunLoopDefaultMode);</span><br></pre></td></tr></table></figure>
+<p><code>loop-&gt;_commonModes</code>是一个Set,里面可以存放各种Mode，在runloop的创建过程中已经把defaultMode存进了CommonMode中了。</p>
+<h2 id="输入源"><a href="#输入源" class="headerlink" title="输入源"></a>输入源</h2><p>基于上图我们可以得知事件源分为基于Port的源，自定义源以及Cocoa中的方法执行源(楔子中的例子)</p>
+<h2 id="Timer"><a href="#Timer" class="headerlink" title="Timer"></a>Timer</h2><p>就是我们所认知的定时器，在预设的时间将事件传递给线程。当然这个时间不一定是实时的，当所在线程卡顿时或者在自动轮播图那个例子的情况下Timer的事件源都可能会出现问题。</p>
+<h2 id="Observer"><a href="#Observer" class="headerlink" title="Observer"></a>Observer</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">/* Run Loop Observer Activities */</span><br><span class="line">typedef CF_OPTIONS(CFOptionFlags, CFRunLoopActivity) &#123;</span><br><span class="line">    kCFRunLoopEntry = (1UL &lt;&lt; 0),   // RunLoop入口</span><br><span class="line">    kCFRunLoopBeforeTimers = (1UL &lt;&lt; 1),    // RunLoop即将处理定时器</span><br><span class="line">    kCFRunLoopBeforeSources = (1UL &lt;&lt; 2),   // RunLoop即将处理输入源</span><br><span class="line">    kCFRunLoopBeforeWaiting = (1UL &lt;&lt; 5),   // RunLoop即将进入休眠</span><br><span class="line">    kCFRunLoopAfterWaiting = (1UL &lt;&lt; 6),    // RunLoop被唤醒，但在处理唤醒它的事件之前</span><br><span class="line">    kCFRunLoopExit = (1UL &lt;&lt; 7),    // 退出RunLoop</span><br><span class="line">    kCFRunLoopAllActivities = 0x0FFFFFFFU</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>倘若你需要对RunLoop的这些状态进行监听，调用<code>CFRunLoopObserverCreate()</code>并用<code>CFRunLoopObserverRef</code>接收返回值即可</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">CFRunLoopObserverRef observer = CFRunLoopObserverCreate(kCFAllocatorDefault, kCFRunLoopAllActivities, YES, 0, &amp;runLoopObserverCallBack, &amp;context);</span><br><span class="line"></span><br><span class="line">CFRunLoopAddObserver(CFRunLoopGetMain(), observer, kCFRunLoopCommonModes);</span><br></pre></td></tr></table></figure>
+<h2 id="RunLoop内部逻辑"><a href="#RunLoop内部逻辑" class="headerlink" title="RunLoop内部逻辑"></a>RunLoop内部逻辑</h2><p><img src="https://raw.githubusercontent.com/sthyuhao/BlogImgZone/master/236e9475afc0cdf70f3d40d61eb93c.jpg" alt></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><span class="line">CFRunLoopRunSpecific() &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="comment">// 通知观察者将要进入RunLoop</span></span><br><span class="line">    <span class="keyword">if</span> (currentMode-&gt;_observerMask &amp; kCFRunLoopEntry ) __CFRunLoopDoObservers(rl, currentMode, kCFRunLoopEntry); </span><br><span class="line">	result = __CFRunLoopRun(rl, currentMode, seconds, returnAfterSourceHandled, previousMode);</span><br><span class="line">    <span class="comment">//  即将退出RunLoop</span></span><br><span class="line">    <span class="keyword">if</span> (currentMode-&gt;_observerMask &amp; kCFRunLoopExit ) __CFRunLoopDoObservers(rl, currentMode, kCFRunLoopExit); </span><br><span class="line">	 ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">__CFRunLoopRun() &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">do</span> &#123;</span><br><span class="line">        <span class="comment">//  通知观察者将要处理Timer</span></span><br><span class="line">    <span class="keyword">if</span> (rlm-&gt;_observerMask &amp; kCFRunLoopBeforeTimers) __CFRunLoopDoObservers(rl, rlm, kCFRunLoopBeforeTimers);</span><br><span class="line">    <span class="comment">//  通知观察者将要处理Sources</span></span><br><span class="line">    <span class="keyword">if</span> (rlm-&gt;_observerMask &amp; kCFRunLoopBeforeSources) __CFRunLoopDoObservers(rl, rlm, kCFRunLoopBeforeSources);</span><br><span class="line">    __CFRunLoopDoBlocks(rl, rlm);</span><br><span class="line">    <span class="comment">//  如果有Source0，处理Source0</span></span><br><span class="line">    Boolean sourceHandledThisLoop = __CFRunLoopDoSources0(rl, rlm, stopAfterHandle);</span><br><span class="line">    <span class="keyword">if</span> (sourceHandledThisLoop) &#123;</span><br><span class="line">        __CFRunLoopDoBlocks(rl, rlm);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//  如果有Source1则跳转执行handle_msg()</span></span><br><span class="line">    <span class="keyword">if</span> (MACH_PORT_NULL != dispatchPort &amp;&amp; !didDispatchPortLastTime) &#123;</span><br><span class="line">        msg = (<span class="keyword">mach_msg_header_t</span> *)msg_buffer;</span><br><span class="line">        <span class="keyword">if</span> (__CFRunLoopServiceMachPort(dispatchPort, &amp;msg, <span class="keyword">sizeof</span>(msg_buffer), &amp;livePort, <span class="number">0</span>, &amp;voucherState, <span class="literal">NULL</span>)) &#123;</span><br><span class="line">            <span class="keyword">goto</span> handle_msg;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//  即将进入休眠</span></span><br><span class="line">    <span class="keyword">if</span> (!poll &amp;&amp; (rlm-&gt;_observerMask &amp; kCFRunLoopBeforeWaiting)) __CFRunLoopDoObservers(rl, rlm, kCFRunLoopBeforeWaiting);</span><br><span class="line">	__CFRunLoopSetSleeping(rl);</span><br><span class="line">	</span><br><span class="line">	...</span><br><span class="line">	</span><br><span class="line">    <span class="comment">//  RunLoop被唤醒</span></span><br><span class="line">    	<span class="keyword">if</span> (!poll &amp;&amp; (rlm-&gt;_observerMask &amp; kCFRunLoopAfterWaiting)) __CFRunLoopDoObservers(rl, rlm, kCFRunLoopAfterWaiting);</span><br><span class="line">    <span class="comment">// 处理消息</span></span><br><span class="line">    	handle_msg:</span><br><span class="line">        <span class="keyword">if</span> (MACH_PORT_NULL == livePort) &#123;</span><br><span class="line">            CFRUNLOOP_WAKEUP_FOR_NOTHING();</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (livePort == rl-&gt;_wakeUpPort) &#123;</span><br><span class="line">            CFRUNLOOP_WAKEUP_FOR_WAKEUP();</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (modeQueuePort != MACH_PORT_NULL &amp;&amp; livePort == modeQueuePort) &#123;</span><br><span class="line">            <span class="comment">//  收到Timer唤起RunLoop</span></span><br><span class="line">            CFRUNLOOP_WAKEUP_FOR_TIMER();</span><br><span class="line">            <span class="comment">//  开始处理Timer事件</span></span><br><span class="line">            <span class="keyword">if</span> (!__CFRunLoopDoTimers(rl, rlm, mach_absolute_time())) &#123;</span><br><span class="line">                __CFArmNextTimerInMode(rlm, rl);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        ...</span><br><span class="line">        <span class="comment">//   调用 mach_msg 等待接受 mach_port 的消息。线程将进入休眠, 直到被下面某一个事件唤醒。</span></span><br><span class="line">        __CFRunLoopServiceMachPort(waitSet, &amp;msg, <span class="keyword">sizeof</span>(msg_buffer), &amp;livePort, poll ? <span class="number">0</span> : TIMEOUT_INFINITY, &amp;voucherState, &amp;voucherCopy);</span><br><span class="line">        ...</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 收到Source唤起RunLoop</span></span><br><span class="line">            CFRUNLOOP_WAKEUP_FOR_SOURCE();</span><br><span class="line">            <span class="comment">// 开始处理Source1</span></span><br><span class="line">            CFRunLoopSourceRef rls = __CFRunLoopModeFindSourceForMachPort(rl, rlm, livePort);</span><br><span class="line">            <span class="keyword">if</span> (rls) &#123;</span><br><span class="line">                <span class="keyword">mach_msg_header_t</span> *reply = <span class="literal">NULL</span>;</span><br><span class="line">                sourceHandledThisLoop = __CFRunLoopDoSource1(rl, rlm, rls, msg, msg-&gt;msgh_size, &amp;reply) || sourceHandledThisLoop;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//  处理加入到Loop的block</span></span><br><span class="line">            __CFRunLoopDoBlocks(rl, rlm);</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span> (sourceHandledThisLoop &amp;&amp; stopAfterHandle) &#123;</span><br><span class="line">                <span class="comment">// 进入loop时参数说处理完事件就返回。</span></span><br><span class="line">                retVal = kCFRunLoopRunHandledSource;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (timeout_context-&gt;termTSR &lt; mach_absolute_time()) &#123;</span><br><span class="line">                <span class="comment">// 超出传入参数标记的超时时间了</span></span><br><span class="line">                retVal = kCFRunLoopRunTimedOut;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (__CFRunLoopIsStopped(rl)) &#123;</span><br><span class="line">                <span class="comment">// 被外部调用者强制停止了</span></span><br><span class="line">                __CFRunLoopUnsetStopped(rl);</span><br><span class="line">                retVal = kCFRunLoopRunStopped;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (rlm-&gt;_stopped) &#123;</span><br><span class="line">                rlm-&gt;_stopped = <span class="literal">false</span>;</span><br><span class="line">                retVal = kCFRunLoopRunStopped;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (__CFRunLoopModeIsEmpty(rl, rlm, previousMode)) &#123;</span><br><span class="line">                <span class="comment">//  source/timer/observer一个都没有了</span></span><br><span class="line">                retVal = kCFRunLoopRunFinished;</span><br><span class="line">            &#125;</span><br><span class="line">    &#125; <span class="keyword">while</span> (<span class="number">0</span> == retVal);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>source0：非port的事件源<br>source1：基于port的事件源<br>其实记住0和1的Bool值就能方便的记住两个source的区别了，更通俗的解释：<br>    source0：自定义事件或者是performSelector等事件<br>    source1：来自系统内核或者其他进程或线程的事件</p>
+<h3 id="Question"><a href="#Question" class="headerlink" title="Question"></a>Question</h3><p>Q：当APP处于静止（休眠）状态，这时候去点击屏幕，事件的响应流程是怎么样的？<br>A：IOKit封装IOHIDEvent将event传递给SpringBoard，再通过mach_port传递给当前APP进程，这时候触发RunLoop的source1，然后source1的回调触发source0，之后就脱离RunLoop的范畴就不往下分析了，感兴趣的同学可前往<a href="https://www.jianshu.com/p/c294d1bd963d" target="_blank" rel="noopener">iOS触摸事件全家桶</a></p>
+<p>Q：RunLoop正在休息时处于什么状态？<br>A：也就是图中所示的第7个步骤，当事件处理完后，系统会去调用<code>mach_msg_trap()</code>触发内核状态的切换，使程序属于休眠状态。其实当我们的APP静止时，直接在Xcode中进行暂停，可以看见几乎所有线程都处于<code>mach_msg_trap</code>状态。</p>
+<p>通过这个问题是不是对Source0和Source1有了比较深刻的理解了？当然带个0和1只是为了方便记忆，实际上我们应该对source的认知应该是他是否是基于port的事件源。</p>
+<h1 id="怎么用RunLoop？"><a href="#怎么用RunLoop？" class="headerlink" title="怎么用RunLoop？"></a>怎么用RunLoop？</h1><p>通过上面的一些分析，对RunLoop应该有了一些认知，但日常开发中它能给予我们哪些帮助？如果您计划执行以下任何操作，则需要启动RunLoop：</p>
+<ol>
+<li>使用端口或自定义输入源与其他线程通信。</li>
+<li>在线程上使用定时器。</li>
+<li>使用performSelector。</li>
+<li>保持线程以执行定期任务。</li>
+</ol>
+<h2 id="主线程卡顿监测"><a href="#主线程卡顿监测" class="headerlink" title="主线程卡顿监测"></a>主线程卡顿监测</h2><p>根据上面的RunLoop的逻辑处理流程我们可以推测出RunLoop的事件处理事件主要在<code>kCFRunLoopBeforeSources</code>和<code>kCFRunLoopBeforeWaiting</code>之间，而在这两个状态下如果发生了超时操作，那么RunLoop必然会保持<code>kCFRunLoopBeforeSources</code>这个状态。</p>
+<p>假设事件A是一个会影响性能的卡顿操作，那么事件A到RunLoop的时候会先触发<code>kCFRunLoopBeforeSources</code>，然后RunLoop状态到达<code>kCFRunLoopAfterWaiting</code>，在这个状态下开辟一个子线程，设定一个阈值，让子线程先睡一会，如果子线程睡醒了而主线程依然在执行事件A，则认为事件A是个卡顿的操作。</p>
+<p>Show me the Code:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">runLoopObserverCallBack</span><span class="params">(CFRunLoopObserverRef observer, CFRunLoopActivity activity, <span class="keyword">void</span> *info)</span> </span>&#123;</span><br><span class="line">    [YTAppFluencyMonitor sharedMonitor].currentActivity = activity;</span><br><span class="line">    dispatch_semaphore_signal([YTAppFluencyMonitor sharedMonitor].semphore);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)startMonitoring &#123;</span><br><span class="line">    <span class="keyword">if</span> (_isMonitoring) &#123; <span class="keyword">return</span>; &#125;</span><br><span class="line">    _isMonitoring = YES;</span><br><span class="line">    CFRunLoopObserverContext context = &#123;</span><br><span class="line">        <span class="number">0</span>,</span><br><span class="line">        (__bridge <span class="keyword">void</span> *)self,</span><br><span class="line">        <span class="literal">NULL</span>,</span><br><span class="line">        <span class="literal">NULL</span></span><br><span class="line">    &#125;;</span><br><span class="line">    _observer = CFRunLoopObserverCreate(kCFAllocatorDefault, kCFRunLoopAllActivities, YES, <span class="number">0</span>, &amp;runLoopObserverCallBack, &amp;context);</span><br><span class="line">    CFRunLoopAddObserver(CFRunLoopGetMain(), _observer, kCFRunLoopCommonModes);</span><br><span class="line">    </span><br><span class="line">    dispatch_async(yt_event_monitor_queue(), ^&#123;</span><br><span class="line">        <span class="keyword">while</span> ([YTAppFluencyMonitor sharedMonitor].isMonitoring) &#123;</span><br><span class="line">            <span class="keyword">if</span> ([YTAppFluencyMonitor sharedMonitor].currentActivity == kCFRunLoopBeforeWaiting) &#123;</span><br><span class="line">                __block BOOL timeOut = YES;</span><br><span class="line">                dispatch_async(dispatch_get_main_queue(), ^&#123;</span><br><span class="line">                    timeOut = NO;</span><br><span class="line">                    dispatch_semaphore_signal([YTAppFluencyMonitor sharedMonitor].eventSemphore);</span><br><span class="line">                &#125;);</span><br><span class="line">                [NSThread sleepForTimeInterval: time_out_interval];</span><br><span class="line">                <span class="keyword">if</span> (timeOut) &#123;</span><br><span class="line">                    [YTBacktraceLogger yt_logMain];</span><br><span class="line">                &#125;</span><br><span class="line">                dispatch_wait([YTAppFluencyMonitor sharedMonitor].eventSemphore, DISPATCH_TIME_FOREVER);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)stopMonitoring &#123;</span><br><span class="line">    <span class="keyword">if</span> (!_isMonitoring) &#123; <span class="keyword">return</span>; &#125;</span><br><span class="line">    _isMonitoring = NO;</span><br><span class="line">    </span><br><span class="line">    CFRunLoopRemoveObserver(CFRunLoopGetMain(), _observer, kCFRunLoopCommonModes);</span><br><span class="line">    CFRelease(_observer);</span><br><span class="line">    _observer = nil;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>End。</p>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>发表日期：<a href="http://yoursite.com/2019/08/05/2019-08-05/">August 5th 2019, 8:13:17 pm</a>
+            </p><p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2019/07/04/2019-07-04/" title="GCD线程管理-内核相关">
+                    <div class="prevTitle">GCD线程管理-内核相关</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    <div id="disqus_thread"></div>
+    <script>
+        /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+        
+        var disqus_config = function () {
+        this.page.url = "http://yoursite.com/2019/08/05/2019-08-05/";  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = "深入浅出RunLoop"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        };
+        
+        (function () { // DON'T EDIT BELOW THIS LINE
+            var d = document, s = d.createElement('script');
+            s.src = 'https://sthyuhao.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+    
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:sthyuhao@126.com" class="iconfont-archer email" title="email"></a>
+            
+        
+    
+        
+            
+                <a href="https://github.com/sthyuhao" class="iconfont-archer github" target="_blank" title="github"></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#楔子"><span class="toc-number">1.</span> <span class="toc-text">楔子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#概念"><span class="toc-number">2.</span> <span class="toc-text">概念</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#剖析"><span class="toc-number">3.</span> <span class="toc-text">剖析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#RunLoopModes"><span class="toc-number">3.1.</span> <span class="toc-text">RunLoopModes</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Quesetion"><span class="toc-number">3.1.1.</span> <span class="toc-text">Quesetion</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#输入源"><span class="toc-number">3.2.</span> <span class="toc-text">输入源</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Timer"><span class="toc-number">3.3.</span> <span class="toc-text">Timer</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Observer"><span class="toc-number">3.4.</span> <span class="toc-text">Observer</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RunLoop内部逻辑"><span class="toc-number">3.5.</span> <span class="toc-text">RunLoop内部逻辑</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Question"><span class="toc-number">3.5.1.</span> <span class="toc-text">Question</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#怎么用RunLoop？"><span class="toc-number">4.</span> <span class="toc-text">怎么用RunLoop？</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#主线程卡顿监测"><span class="toc-number">4.1.</span> <span class="toc-text">主线程卡顿监测</span></a></li></ol></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 14
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2019 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/05</span><a class="archive-post-title" href="/2019/08/05/2019-08-05/">深入浅出RunLoop</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/04</span><a class="archive-post-title" href="/2019/07/04/2019-07-04/">GCD线程管理-内核相关</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/27</span><a class="archive-post-title" href="/2019/06/27/2019-06-27/">GCD线程管理从入门到放弃</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/20</span><a class="archive-post-title" href="/2019/03/20/2019-03-20/">扒一扒Category以及关联对象</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/13</span><a class="archive-post-title" href="/2019/02/13/2019-02-13/">年初的一些感慨</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/21</span><a class="archive-post-title" href="/2018/12/21/2018-12-21/">集成Hikari问题汇总</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/12</span><a class="archive-post-title" href="/2018/11/12/2018-11-12/">解析__block</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/01</span><a class="archive-post-title" href="/2018/11/01/2018-10-31/">从源码分析Block的内存管理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/19</span><a class="archive-post-title" href="/2018/10/19/2018-10-19/">weak到底做了些啥？</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/19</span><a class="archive-post-title" href="/2018/07/19/initialize使用不当造成的问题/">initialize使用不当造成的问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/17</span><a class="archive-post-title" href="/2018/04/17/一次逆向mac微信过程记录/">一次逆向mac微信过程记录（自动添加群聊好友）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/11</span><a class="archive-post-title" href="/2018/04/11/记录一次APP启动优化/">记录一次APP启动优化</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2017 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/03</span><a class="archive-post-title" href="/2017/08/03/Xcode集成O-LLVM/">Xcode集成O-LLVM</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/15</span><a class="archive-post-title" href="/2017/05/15/LLVM与Clang的一些事儿/">LLVM与Clang的一些事儿</a>
+        </li>
+    
+    </ul></div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="block"><span class="iconfont-archer">&#xe606;</span>block</span>
+    
+        <span class="sidebar-tag-name" data-tags="LLVM"><span class="iconfont-archer">&#xe606;</span>LLVM</span>
+    
+        <span class="sidebar-tag-name" data-tags="随笔杂谈"><span class="iconfont-archer">&#xe606;</span>随笔杂谈</span>
+    
+        <span class="sidebar-tag-name" data-tags="O-LLVM"><span class="iconfont-archer">&#xe606;</span>O-LLVM</span>
+    
+        <span class="sidebar-tag-name" data-tags="逆向"><span class="iconfont-archer">&#xe606;</span>逆向</span>
+    
+        <span class="sidebar-tag-name" data-tags="优化"><span class="iconfont-archer">&#xe606;</span>优化</span>
+    
+        <span class="sidebar-tag-name" data-tags="weak"><span class="iconfont-archer">&#xe606;</span>weak</span>
+    
+        <span class="sidebar-tag-name" data-tags="Category"><span class="iconfont-archer">&#xe606;</span>Category</span>
+    
+        <span class="sidebar-tag-name" data-tags="gcd"><span class="iconfont-archer">&#xe606;</span>gcd</span>
+    
+        <span class="sidebar-tag-name" data-tags="RunLoop"><span class="iconfont-archer">&#xe606;</span>RunLoop</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br>
+    1、请确保node版本大于6.2<br>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="block"><span class="iconfont-archer">&#xe60a;</span>block</span>
+    
+        <span class="sidebar-category-name" data-categories="混淆"><span class="iconfont-archer">&#xe60a;</span>混淆</span>
+    
+        <span class="sidebar-category-name" data-categories="随笔杂谈"><span class="iconfont-archer">&#xe60a;</span>随笔杂谈</span>
+    
+        <span class="sidebar-category-name" data-categories="LLVM"><span class="iconfont-archer">&#xe60a;</span>LLVM</span>
+    
+        <span class="sidebar-category-name" data-categories="逆向"><span class="iconfont-archer">&#xe60a;</span>逆向</span>
+    
+        <span class="sidebar-category-name" data-categories="优化"><span class="iconfont-archer">&#xe60a;</span>优化</span>
+    
+        <span class="sidebar-category-name" data-categories="内存管理"><span class="iconfont-archer">&#xe60a;</span>内存管理</span>
+    
+        <span class="sidebar-category-name" data-categories="Category"><span class="iconfont-archer">&#xe60a;</span>Category</span>
+    
+        <span class="sidebar-category-name" data-categories="多线程"><span class="iconfont-archer">&#xe60a;</span>多线程</span>
+    
+        <span class="sidebar-category-name" data-categories="RunLoop"><span class="iconfont-archer">&#xe60a;</span>RunLoop</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "余果"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+
