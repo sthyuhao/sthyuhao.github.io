@@ -346,6 +346,38 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href="/2019/11/05/2019-11-01/">
+            
+                <span>Autorelease知多少</span>
+        </a>
+        <div class="abstract-content">
+            引最近脑子里冒出一个疑问，子线程的RunLoop默认是没有开启的，需要程序猿手动去开启，那子线程的Autorelease对象是在什么时候被销毁的？
+带着问题google了一翻，发现有些博客里说得也挺好的，但就是看不下去，我这颗浮躁的心啊！带着问题自己去溯源吧，可能看源码更能让我快乐一些！手动狗头。
+从头开始国际惯例是对含有AutoreleasePool的代码进行clang -rewrite，大家都明白怎么一回事，为了省点篇幅就省略了，直接标记重点。
+123456789void *objc_autoreleasePoolPush(void)&#123;    return Autorele...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/11/05</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class="abstract-tags">
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="AutoreleasePool">AutoreleasePool</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href="/2018/11/01/2018-10-31/">
             
                 <span>从源码分析Block的内存管理</span>
@@ -644,9 +676,22 @@ block的结构123456789101112131415struct Block_layout &#123;    void *isa;    i
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 14
+        Total : 15
         </div>
         <!-- search  -->
         
@@ -659,6 +704,11 @@ block的结构123456789101112131415struct Block_layout &#123;    void *isa;    i
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/05</span><a class="archive-post-title" href="/2019/11/05/2019-11-01/">Autorelease知多少</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -772,6 +822,8 @@ block的结构123456789101112131415struct Block_layout &#123;    void *isa;    i
         <span class="sidebar-tag-name" data-tags="gcd"><span class="iconfont-archer">&#xe606;</span>gcd</span>
     
         <span class="sidebar-tag-name" data-tags="RunLoop"><span class="iconfont-archer">&#xe606;</span>RunLoop</span>
+    
+        <span class="sidebar-tag-name" data-tags="AutoreleasePool"><span class="iconfont-archer">&#xe606;</span>AutoreleasePool</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>

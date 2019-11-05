@@ -359,6 +359,30 @@ height:50vh;
     
     
     <article class="index-post">
+        <a class="abstract-title" href="/2018/07/19/initialize使用不当造成的问题/">
+            
+                <span>initialize使用不当造成的问题</span>
+        </a>
+        <div class="abstract-content">
+            事件由来之前项目中有个让用户一边签署协议，一边录制视频上传的功能，当时法务同学要求的是只能直接拍摄上传，不能让用户在相册里直接选取，然后就有了只能拍摄视频上传的第一个版本。而当用户使用之后表示不能从相册中选取很不方便，有时签署协议过程中出了些问题的话又得重新操作一遍。收到反馈之后，产品也迅速的给出了方案，在原来的的基础上添加一个本地上传的功能，于是我想到了个骚操作。 
+原本这个拍照按钮调用的是系统的拍摄视频，但我直接给替换成了之前同事写的直接拍摄上传了。考虑到之前做启动优化， +load 方法如果越多，app冷启动速度就会越慢，我就将搅拌方法放在了 +initialize中，然后，意想不...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/07/19</span>
+            </div>
+            <!-- tags  -->
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href="/2018/04/17/一次逆向mac微信过程记录/">
             
                 <span>一次逆向mac微信过程记录（自动添加群聊好友）</span>
@@ -794,9 +818,22 @@ run一哈，控制台输出
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 14
+        Total : 15
         </div>
         <!-- search  -->
         
@@ -809,6 +846,11 @@ run一哈，控制台输出
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/05</span><a class="archive-post-title" href="/2019/11/05/2019-11-01/">Autorelease知多少</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -922,6 +964,8 @@ run一哈，控制台输出
         <span class="sidebar-tag-name" data-tags="gcd"><span class="iconfont-archer">&#xe606;</span>gcd</span>
     
         <span class="sidebar-tag-name" data-tags="RunLoop"><span class="iconfont-archer">&#xe606;</span>RunLoop</span>
+    
+        <span class="sidebar-tag-name" data-tags="AutoreleasePool"><span class="iconfont-archer">&#xe606;</span>AutoreleasePool</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>

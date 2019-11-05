@@ -346,55 +346,26 @@
     
     
     <article class="index-post">
-        <a class="abstract-title" href="/2019/07/04/2019-07-04/">
+        <a class="abstract-title" href="/2019/11/05/2019-11-01/">
             
-                <span>GCD线程管理-内核相关</span>
+                <span>Autorelease知多少</span>
         </a>
         <div class="abstract-content">
-            pthread_wqthread()从上文的分析我们了解到了内核的调用链如下：
-123start_wqthread -&gt; _pthread_wqthread -&gt;_dispatch_worker_thread2 -&gt;_dispatch_root_queue_drain -&gt;_dispatch_queue_override_invoke -&gt;_dispatch_client_callout -&gt; _dispatch_call_block_and_release
-12345678910111213141516171819202122232425262728...
+            引最近脑子里冒出一个疑问，子线程的RunLoop默认是没有开启的，需要程序猿手动去开启，那子线程的Autorelease对象是在什么时候被销毁的？
+带着问题google了一翻，发现有些博客里说得也挺好的，但就是看不下去，我这颗浮躁的心啊！带着问题自己去溯源吧，可能看源码更能让我快乐一些！手动狗头。
+从头开始国际惯例是对含有AutoreleasePool的代码进行clang -rewrite，大家都明白怎么一回事，为了省点篇幅就省略了，直接标记重点。
+123456789void *objc_autoreleasePoolPush(void)&#123;    return Autorele...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/07/04</span>
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/11/05</span>
             </div>
             <!-- tags  -->
             
             <div class="abstract-tags">
     
-        <a class="post-tag" href="javascript:void(0);" data-tags="Category">Category</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2019/03/20/2019-03-20/">
-            
-                <span>扒一扒Category以及关联对象</span>
-        </a>
-        <div class="abstract-content">
-            从结构说起源码来自objc4-750
-1234567891011121314151617struct category_t &#123;    const char *name;   //!&lt;  分类名称    classref_t cls;   //!&lt;  属于哪个类    struct method_list_t *instanceMethods;   //!&lt;  实例方法列表    struct method_list_t *classMethods;   //!&lt;  类方法列表    struct protocol_list_t *protocols;  ...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/03/20</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class="abstract-tags">
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="Category">Category</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="AutoreleasePool">AutoreleasePool</a>
     
 </div>
             
