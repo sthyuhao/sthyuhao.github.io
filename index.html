@@ -359,6 +359,36 @@ height:50vh;
     
     
     <article class="index-post">
+        <a class="abstract-title" href="/2020/02/28/2020-02-28/">
+            
+                <span>为什么要设计metaclass</span>
+        </a>
+        <div class="abstract-content">
+            引今早起床打开微信，发现知识小集推送了一篇文章《阿里、字节：一套高效的iOS面试题》，打开瞅了眼，看到第二题就给我看懵圈了，为什么要设计metaclass？在我的知识体系中关于元类的认知是类对象的isa指向元类对象，元类对象存储着类方法列表，然后就没有然后了。
+带着这个疑问我边开始google了，找到一文Why is MetaClass in Objective-C？，该文很好的解释了OC面向对象能力的部分师承于Smalltalk，通过类的划分和消息传递两个亮点解释了为什么要有metaclass，但是我想仅仅通过设计层面解释恐怕打动不了面试官，如果面试官反问为什么OC要借鉴Smallta...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/02/28</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class="abstract-tags">
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="runtime">runtime</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href="/2019/11/05/2019-11-01/">
             
                 <span>Autorelease知多少</span>
@@ -624,38 +654,6 @@ block的结构123456789101112131415struct Block_layout &#123;    void *isa;    i
             <div class="abstract-tags">
     
         <a class="post-tag" href="javascript:void(0);" data-tags="block">block</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2018/10/19/2018-10-19/">
-            
-                <span>weak到底做了些啥？</span>
-        </a>
-        <div class="abstract-content">
-            weak到底做了些啥？入行也好几年了，关于内存管理几乎是面试中必定会问到的问题，内存管理中问的最多的大概就是循环引用和weak的实现了，关于weak怎么将修饰的对象置为nil的，可能几年前的回答就是：
-1runtime维护了一个weak表，用于存储指向某个对象的所有weak指针。weak表其实是一个hash（哈希）表，Key是所指对象的地址，Value是weak指针的地址（这个地址的值是所指对象指针的地址）数组。
-再之后可能就是weak的三部曲：
-1231、初始化时：runtime会调用objc_initWeak函数，初始化一个新的weak指针指向对象的地址。2、添加引用时：objc_i...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/10/19</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class="abstract-tags">
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="weak">weak</a>
     
 </div>
             
@@ -988,9 +986,22 @@ block的结构123456789101112131415struct Block_layout &#123;    void *isa;    i
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 15
+        Total : 16
         </div>
         <!-- search  -->
         
@@ -1000,6 +1011,20 @@ block的结构123456789101112131415struct Block_layout &#123;    void *isa;    i
     
     
     
+    
+    <div class="archive-year"> 2020 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/28</span><a class="archive-post-title" href="/2020/02/28/2020-02-28/">为什么要设计metaclass</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
@@ -1124,6 +1149,8 @@ block的结构123456789101112131415struct Block_layout &#123;    void *isa;    i
     
         <span class="sidebar-tag-name" data-tags="AutoreleasePool"><span class="iconfont-archer">&#xe606;</span>AutoreleasePool</span>
     
+        <span class="sidebar-tag-name" data-tags="runtime"><span class="iconfont-archer">&#xe606;</span>runtime</span>
+    
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
     <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
@@ -1176,6 +1203,8 @@ jsonContent:
         <span class="sidebar-category-name" data-categories="多线程"><span class="iconfont-archer">&#xe60a;</span>多线程</span>
     
         <span class="sidebar-category-name" data-categories="RunLoop"><span class="iconfont-archer">&#xe60a;</span>RunLoop</span>
+    
+        <span class="sidebar-category-name" data-categories="runtime"><span class="iconfont-archer">&#xe60a;</span>runtime</span>
     
     </div>
     <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>

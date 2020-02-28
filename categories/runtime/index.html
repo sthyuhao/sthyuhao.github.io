@@ -346,55 +346,24 @@
     
     
     <article class="index-post">
-        <a class="abstract-title" href="/2019/07/04/2019-07-04/">
+        <a class="abstract-title" href="/2020/02/28/2020-02-28/">
             
-                <span>GCD线程管理-内核相关</span>
+                <span>为什么要设计metaclass</span>
         </a>
         <div class="abstract-content">
-            pthread_wqthread()从上文的分析我们了解到了内核的调用链如下：
-123start_wqthread -&gt; _pthread_wqthread -&gt;_dispatch_worker_thread2 -&gt;_dispatch_root_queue_drain -&gt;_dispatch_queue_override_invoke -&gt;_dispatch_client_callout -&gt; _dispatch_call_block_and_release
-12345678910111213141516171819202122232425262728...
+            引今早起床打开微信，发现知识小集推送了一篇文章《阿里、字节：一套高效的iOS面试题》，打开瞅了眼，看到第二题就给我看懵圈了，为什么要设计metaclass？在我的知识体系中关于元类的认知是类对象的isa指向元类对象，元类对象存储着类方法列表，然后就没有然后了。
+带着这个疑问我边开始google了，找到一文Why is MetaClass in Objective-C？，该文很好的解释了OC面向对象能力的部分师承于Smalltalk，通过类的划分和消息传递两个亮点解释了为什么要有metaclass，但是我想仅仅通过设计层面解释恐怕打动不了面试官，如果面试官反问为什么OC要借鉴Smallta...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/07/04</span>
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/02/28</span>
             </div>
             <!-- tags  -->
             
             <div class="abstract-tags">
     
-        <a class="post-tag" href="javascript:void(0);" data-tags="Category">Category</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2019/03/20/2019-03-20/">
-            
-                <span>扒一扒Category以及关联对象</span>
-        </a>
-        <div class="abstract-content">
-            从结构说起源码来自objc4-750
-1234567891011121314151617struct category_t &#123;    const char *name;   //!&lt;  分类名称    classref_t cls;   //!&lt;  属于哪个类    struct method_list_t *instanceMethods;   //!&lt;  实例方法列表    struct method_list_t *classMethods;   //!&lt;  类方法列表    struct protocol_list_t *protocols;  ...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/03/20</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class="abstract-tags">
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="Category">Category</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="runtime">runtime</a>
     
 </div>
             
