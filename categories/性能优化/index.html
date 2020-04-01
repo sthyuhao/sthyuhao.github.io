@@ -346,25 +346,59 @@
     
     
     <article class="index-post">
-        <a class="abstract-title" href="/2017/08/03/Xcode集成O-LLVM/">
+        <a class="abstract-title" href="/2020/04/01/2020-04-01/">
             
-                <span>Xcode集成O-LLVM</span>
+                <span>iOS性能优化-页面流畅度篇</span>
         </a>
         <div class="abstract-content">
-            要在Xcode中使用O-LLVM，必须要编写一个Xcode插件。
-首先
-12345$ cd /Applications/Xcode.app/Contents/PlugIns/Xcode3Core.ideplugin/Contents/SharedSupport/Developer/Library/Xcode/Plug-ins/$ sudo cp -r Clang\ LLVM\ 1.0.xcplugin/ Obfuscator.xcplugin$ cd Obfuscator.xcplugin/Contents/$ sudo plutil -convert xml1 Info.plist$ ...
+            楔子其实市面上有很多关于卡顿优化相关的文章，从入行没多久就接触到了YY大神的iOS 保持界面流畅的技巧延伸到现在百花齐放的各路优化技巧，但是万变不离其宗的原理还是减少CPU和GPU的工作量，让这二位兄弟不用处理高强度的任务。
+卡顿产生的原因
+当主线程启动时会先有CPU处理好需要显示的数据，然后交付给GPU，然后GPU通过合成、渲染等操作将处理结果提交到帧缓存中，当垂直同步信号到达时将处理结果显示到屏幕上。每个垂直同步信号到达的间隔约为16.67ms(1秒60帧)，如果在CPU和GPU在垂直同步信号到达直接就交付处理结果到帧缓存中则不会产生卡顿，而当CPU和GPU两者处理时间大于16.67...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/08/03</span>
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/04/01</span>
             </div>
             <!-- tags  -->
             
             <div class="abstract-tags">
     
-        <a class="post-tag" href="javascript:void(0);" data-tags="O-LLVM">O-LLVM</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="优化">优化</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href="/2020/03/26/2020-03-26/">
+            
+                <span>iOS性能优化-能源篇</span>
+        </a>
+        <div class="abstract-content">
+            
+WWDC2017有一篇关于节省电池能源的分享，视频中表示图中的四兄弟就是吃掉大量电池能源的罪魁祸首：1、CPU的处理工作2、网络3、定位4、图形处理
+网络的消耗
+数据加载现今市面上的App利用网络无非是为了加载数据、上传图片/文件以及上报用户分析数据（埋点）。早些年可能有部分App加载数据可能是用定时器操作，经过固定的一段时间就拉取一次数据。这样的操作方式需要CPU执行一个定时器，然后每一段时间就需要加载一次网络请求，这样的开销可想而知。
+
+上传图片/文件可能目前有些App的操作方式是拿到上传任务就马上开始进行图片/文件上传，如果失败或者超时了就进行重试，这样的操作方式下大概的能源消耗...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/03/26</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class="abstract-tags">
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="优化">优化</a>
     
 </div>
             

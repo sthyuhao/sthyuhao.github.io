@@ -22,7 +22,7 @@
     <meta name="description" content>
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>余果的博客</title>
+    <title>iOS性能优化-能源篇 · 余果的博客</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -203,12 +203,23 @@
 </head>
 
     
+        <body class="post-body">
+    
     
 <header class="header">
 
     <div class="read-progress"></div>
     <div class="header-sidebar-menu">&#xe775;</div>
     <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/">余额不足.</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">iOS性能优化-能源篇</a>
+            </div>
+    </div>
     
     <a class="home-link" href="/">余额不足.</a>
 </header>
@@ -220,24 +231,74 @@
 
 
 
+
+height:50vh;
 ">
     
     <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
             
     <div class="site-intro-placeholder"></div>
-    <div class="site-intro-img" style="background-image: url(/)"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
     <div class="site-intro-meta">
         <!-- 标题  -->
         <h1 class="intro-title">
             <!-- 主页  -->
+            
+            iOS性能优化-能源篇
+            <!-- 404 -->
             
         </h1>
         <!-- 副标题 -->
         <p class="intro-subtitle">
             <!-- 主页副标题  -->
             
+            
+            <!-- 404 -->
+            
         </p>
         <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class="post-intro-tags">
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="优化">优化</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">1.5k</span>阅读时长: <span class="post-count reading-time">5 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2020/03/26</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
         
     </div>
 </div>
@@ -338,41 +399,106 @@
 </script>        
         <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
         <div class="container container-unloaded">
-            <main class="main index-page">
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2017/08/03/Xcode集成O-LLVM/">
-            
-                <span>Xcode集成O-LLVM</span>
-        </a>
-        <div class="abstract-content">
-            要在Xcode中使用O-LLVM，必须要编写一个Xcode插件。
-首先
-12345$ cd /Applications/Xcode.app/Contents/PlugIns/Xcode3Core.ideplugin/Contents/SharedSupport/Developer/Library/Xcode/Plug-ins/$ sudo cp -r Clang\ LLVM\ 1.0.xcplugin/ Obfuscator.xcplugin$ cd Obfuscator.xcplugin/Contents/$ sudo plutil -convert xml1 Info.plist$ ...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/08/03</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class="abstract-tags">
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="O-LLVM">O-LLVM</a>
-    
-</div>
-            
-        </div>
+            <main class="main post-page">
+    <article class="article-entry">
+        <p><img src="https://raw.githubusercontent.com/sthyuhao/BlogImgZone/master/22150f2e96bd349ffe4ab26b184b3d.jpg" alt></p>
+<p>WWDC2017有一篇关于节省电池能源的分享，视频中表示图中的四兄弟就是吃掉大量电池能源的罪魁祸首：<br>1、CPU的处理工作<br>2、网络<br>3、定位<br>4、图形处理</p>
+<h1 id="网络的消耗"><a href="#网络的消耗" class="headerlink" title="网络的消耗"></a>网络的消耗</h1><ul>
+<li><p>数据加载<br>现今市面上的App利用网络无非是为了加载数据、上传图片/文件以及上报用户分析数据（埋点）。<br>早些年可能有部分App加载数据可能是用定时器操作，经过固定的一段时间就拉取一次数据。这样的操作方式需要CPU执行一个定时器，然后每一段时间就需要加载一次网络请求，这样的开销可想而知。<br><img src="https://raw.githubusercontent.com/sthyuhao/BlogImgZone/master/133a7aa111aea0c3a5356b79bb1946.jpg" alt></p>
+</li>
+<li><p>上传图片/文件<br>可能目前有些App的操作方式是拿到上传任务就马上开始进行图片/文件上传，如果失败或者超时了就进行重试，这样的操作方式下大概的能源消耗如图所示：<br><img src="https://raw.githubusercontent.com/sthyuhao/BlogImgZone/master/b4ad7d9b5c901ad7ef8213da259542.jpg" alt></p>
+</li>
+</ul>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>1、按需进行网络请求<br>如今大部分的App都配备了下拉刷新的功能，如果用户有需要更新页面数据话直接进行手动下拉即可完成网络数据加载，这样即可不需要维护一个timer已经固定时间的网络请求消耗。<br>2、减少重试次数<br>3、设定合理的超时时间、不然网络服务一直挂载着同样会造成高额的消耗<br>4、上传图片/文件时可采取批量操作减少开销，且可以将上传队列使用UTILITY的QOS优先级<br>5、推荐使用NSURLSession和BackGround session，因为他们具备了WaitsForConnectivity（等待网络可用时再执行任务）、缓存、自动重试、吞吐量监控的能力</p>
+<h1 id="定位"><a href="#定位" class="headerlink" title="定位"></a>定位</h1><p>定位耗电是众所周知的了吧，就不过多赘述</p>
+<h2 id="解决方案-1"><a href="#解决方案-1" class="headerlink" title="解决方案"></a>解决方案</h2><p>1、明确你想要的定位精度水平，精度越高越耗电<br>2、尽量避免使用连续定位的方法<br>3、如果定位已经不再需要使用的时候请关闭定位<br>4、延迟定位更新</p>
+<h1 id="图形处理"><a href="#图形处理" class="headerlink" title="图形处理"></a>图形处理</h1><p>一般情况下，App耗电最大的两个单位就是CPU与GPU，CPU负责计算，GPU负责展示CPU计算好的数据，这些工作是不可避免的，所以官方推荐我们的最佳实践如下。</p>
+<h2 id="解决方案-2"><a href="#解决方案-2" class="headerlink" title="解决方案"></a>解决方案</h2><p>1、避免模糊不清的用法<br>2、尽量减少屏幕元素的更新</p>
+<h1 id="CPU工作的消耗"><a href="#CPU工作的消耗" class="headerlink" title="CPU工作的消耗"></a>CPU工作的消耗</h1><p>一上来就要面对这个严重的问题感觉体验有点不太友好啊，所以苹果在WWDC把这个问题放在了最后说明</p>
+<h2 id="解决方案-3"><a href="#解决方案-3" class="headerlink" title="解决方案"></a>解决方案</h2><p>1、减少后台的操作<br>执行不必要的后台活动会产生一定的能量消耗，<a href="https://developer.apple.com/library/archive/documentation/Performance/Conceptual/EnergyGuide-iOS/WorkLessInTheBackground.html#//apple_ref/doc/uid/TP40015243-CH22-SW1" target="_blank" rel="noopener">苹果的官方性能文档</a>中提到了一些常见后台浪费能源的原因：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Not notifying the system when background activity is complete</span><br><span class="line">当活动完成的时候没有通知系统</span><br><span class="line">Playing silent audio</span><br><span class="line">播放无声的音频</span><br><span class="line">Performing location updates</span><br><span class="line">定位更新</span><br><span class="line">Interacting with Bluetooth accessories</span><br><span class="line">与蓝牙设备的交互</span><br><span class="line">Downloads that could be deferred</span><br><span class="line">后台时依然在下载</span><br></pre></td></tr></table></figure>
+<p>文档中推荐我们的app进入后台时关闭一些不必要的操作、延迟下载操作等。<br>在调用定位操作时，尽量不要使用startUpdatingLocation，即使使用了也尽可能迅速的调用stopUpdatingLocation停止定位服务。</p>
+<p>2、使用优先级低的队列<br>这里不是让你所有的任务都派发在低优先级的队列中，而是可以将一些耗时的操作放入优先级低的队列中。<br>由于高优先级的工作比低优先级的工作执行的更快，所占用的资源更多，因此与低优先级的工作相比，通常需要耗费更多的能源。<br>戴铭老师的<a href="https://ming1016.github.io/2017/06/20/deeply-ios-performance-optimization/" target="_blank" rel="noopener">深入剖析iOS性能优化</a>中提到了：<br>将 GCD 的 block 通过 dispatch_block_create_with_qos_class 方法指定队列的 QoS 为 QOS_CLASS_UTILITY。这种 QoS 系统会针对大的计算，I/O，网络以及复杂数据处理做电量优化。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">* @constant QOS_CLASS_UTILITY</span><br><span class="line">* @abstract A QOS class which indicates work performed by this thread</span><br><span class="line">* may or may not be initiated by the user and that the user is unlikely to be</span><br><span class="line">* immediately waiting for the results.</span><br><span class="line">* @discussion Such work is requested to run at a priority below critical user-</span><br><span class="line">* interactive and user-initiated work, but relatively higher than low-level</span><br><span class="line">* system maintenance tasks. The use of this QOS class indicates the work</span><br><span class="line">* should be run in an energy and thermally-efficient manner. The progress of</span><br><span class="line">* utility work may or may not be indicated to the user, but the effect of such</span><br><span class="line">* work is user-visible.</span><br></pre></td></tr></table></figure>
+<p>通过查询libpthread的源码，有这样的一段注释提到了使用QOS_CLASS_UTILITY会采用高效而节能的方式完成所派发的任务。</p>
+<p>最佳实践：Alamofire</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">TaskDelegate.swift</span><br><span class="line">init(task: URLSessionTask?) &#123;</span><br><span class="line">        _task = task</span><br><span class="line">        self.queue = &#123;</span><br><span class="line">            let operationQueue = OperationQueue()</span><br><span class="line">            operationQueue.maxConcurrentOperationCount = 1</span><br><span class="line">            operationQueue.isSuspended = true</span><br><span class="line">            operationQueue.qualityOfService = .utility</span><br><span class="line">            return operationQueue</span><br><span class="line">        &#125;()</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>SessionManager.swift中的upload操作同样也适用了.utility，代码太长就不贴了。</p>
+<p>使用方法<br>OC:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">dispatch_queue_attr_t attr = dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL, QOS_CLASS_UTILITY, 0);</span><br><span class="line">dispatch_queue_t q = dispatch_queue_create(&quot;queue.name&quot;, attr);</span><br><span class="line">dispatch_async(q, ^&#123;</span><br><span class="line">    // do sth</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>Swift：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">let q = DispatchQueue(label: &quot;queue.name&quot;, qos: .utility, attributes: .concurrent, autoreleaseFrequency: .inherit, target: .none)</span><br><span class="line">q.sync &#123;</span><br><span class="line">    // do sth</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>3、I/O 性能优化<br>当触发I/O相关操作时都会使系统进入高功耗状态，所以在使用I/O操作时请尽量注意以下几点：</p>
+<ol>
+<li>不要过于频繁的访问内存，如果是需要写入状态信息请等待状态完毕再进项写入，如果是需要写入若干零碎的文件，请尝试将零碎的文件合并后再写入。</li>
+<li>要读取或写入大量数据，请考虑使用dispatch_io，它提供了基于GCD的异步API来执行文件I/O。</li>
+<li>尽可能的按顺序进行I/O操作，因为寻找读取和写入的位置都是耗时的操作。</li>
+<li>针对数据类型分析是应该存入缓存或者数据库</li>
+</ol>
+<p>4、干掉那些该死的timer<br>timer的存在会一直占用着cpu资源，让cpu不能处于idle状态，而idle状态下的功耗是最低的，所以能不实用timer就尽量不使用它。</p>
+
     </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>发表日期：<a href="http://yoursite.com/2020/03/26/2020-03-26/">March 26th 2020, 8:13:17 pm</a>
+            </p><p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
     
     <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2020/04/01/2020-04-01/" title="iOS性能优化-页面流畅度篇">
+                    <div class="nextTitle">iOS性能优化-页面流畅度篇</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2020/03/09/media/iOS提升效率的几个Tips/" title="iOS提升效率的几个Tips">
+                    <div class="prevTitle">iOS提升效率的几个Tips</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
     
+    <div id="disqus_thread"></div>
+    <script>
+        /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+        
+        var disqus_config = function () {
+        this.page.url = "http://yoursite.com/2020/03/26/2020-03-26/";  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = "iOS性能优化-能源篇"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        };
+        
+        (function () { // DON'T EDIT BELOW THIS LINE
+            var d = document, s = d.createElement('script');
+            s.src = 'https://sthyuhao.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+    
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
 </main>
             <!-- profile -->
             
@@ -450,6 +576,24 @@
 </footer>
     </div>
     <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#网络的消耗"><span class="toc-number">1.</span> <span class="toc-text">网络的消耗</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#解决方案"><span class="toc-number">1.1.</span> <span class="toc-text">解决方案</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#定位"><span class="toc-number">2.</span> <span class="toc-text">定位</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#解决方案-1"><span class="toc-number">2.1.</span> <span class="toc-text">解决方案</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#图形处理"><span class="toc-number">3.</span> <span class="toc-text">图形处理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#解决方案-2"><span class="toc-number">3.1.</span> <span class="toc-text">解决方案</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#CPU工作的消耗"><span class="toc-number">4.</span> <span class="toc-text">CPU工作的消耗</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#解决方案-3"><span class="toc-number">4.1.</span> <span class="toc-text">解决方案</span></a></li></ol></li></ol>
+    </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
     <div class="sidebar sidebar-hide">
@@ -942,6 +1086,8 @@ jsonContent:
     
     </div>
     <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
      
     </body>
 </html>

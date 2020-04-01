@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="余果">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="余果">
+    
+    <meta name="keywords" content="iOS,OC,Objective-C">
+    
+    <meta name="description" content>
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>iOS性能优化-页面流畅度篇 · 余果的博客</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="stylesheet" href="/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href="/images/logo.png">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js" as="script">
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/">余额不足.</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">iOS性能优化-页面流畅度篇</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href="/">余额不足.</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            iOS性能优化-页面流畅度篇
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class="post-intro-tags">
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="优化">优化</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">5.8k</span>阅读时长: <span class="post-count reading-time">21 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2020/04/01</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="楔子"><a href="#楔子" class="headerlink" title="楔子"></a>楔子</h1><p>其实市面上有很多关于卡顿优化相关的文章，从入行没多久就接触到了YY大神的<a href="https://blog.ibireme.com/2015/11/12/smooth_user_interfaces_for_ios/" target="_blank" rel="noopener">iOS 保持界面流畅的技巧</a>延伸到现在百花齐放的各路优化技巧，但是万变不离其宗的原理还是减少CPU和GPU的工作量，让这二位兄弟不用处理高强度的任务。</p>
+<h1 id="卡顿产生的原因"><a href="#卡顿产生的原因" class="headerlink" title="卡顿产生的原因"></a>卡顿产生的原因</h1><p><img src="https://raw.githubusercontent.com/sthyuhao/BlogImgZone/master/60794918bd53771ba5c1e2d9b0c957.jpg" alt></p>
+<p>当主线程启动时会先有CPU处理好需要显示的数据，然后交付给GPU，然后GPU通过合成、渲染等操作将处理结果提交到帧缓存中，当垂直同步信号到达时将处理结果显示到屏幕上。每个垂直同步信号到达的间隔约为16.67ms(1秒60帧)，如果在CPU和GPU在垂直同步信号到达直接就交付处理结果到帧缓存中则不会产生卡顿，而当CPU和GPU两者处理时间大于16.67ms则会出线掉帧的情况，如上图所示，第二帧处理的时间过长，垂直同步信号已经到达GPU依然没有将数据提交到帧缓存中，则该次计算的处理结果将在下一个垂直同步信号结果到达时再显示到屏幕上，这就是卡顿的原因。</p>
+<p>所以，不论是CPU处理时间过长还是GPU处理时间过长都会出现卡顿的情况，如何给这二位兄弟减负就是解决卡顿的方案。</p>
+<h1 id="Core-Animation"><a href="#Core-Animation" class="headerlink" title="Core Animation"></a>Core Animation</h1><h2 id="Pipeline"><a href="#Pipeline" class="headerlink" title="Pipeline"></a>Pipeline</h2><p>为什么要介绍Core Animation？首先咱不要被他的名字误解认为他是个做动画的，他的职责是将可视内容划分视图层次结构，然后交付给GPU进行加速渲染。</p>
+<p>以下为Core Animation的流程图（来自WWDC 2014 Session 419）<br><img src="https://raw.githubusercontent.com/sthyuhao/BlogImgZone/master/77b413eaebe44272c12a99f37776b4.jpg" alt></p>
+<p>流程如下：<br>1、Application接收到需要更新视图层级的通知，这个阶段为事务提交阶段<br>2、事务提交阶段结束时，视图层级结构将被编码并发送到渲染服务器<br>3、渲染服务器对步骤2发送过来的数据包进行解码<br>4、渲染服务器等待下一次同步时机以等待GPU渲染之后的结果（调用OpenGL ES或者Metal）<br>5、当视图资源可用且审查完毕时即可让GPU开始渲染工作，这些工作都应该在下一个同步信号到达之前完成，因为需要切换帧缓冲区并向用户显示视图结构<br>6、显示至屏幕</p>
+<h2 id="Commit-Transaction"><a href="#Commit-Transaction" class="headerlink" title="Commit Transaction"></a>Commit Transaction</h2><p>事务提交阶段是开发人员最长接触的地方，也是影响App渲染性能的最大因素<br><img src="https://raw.githubusercontent.com/sthyuhao/BlogImgZone/master/aecbbda5031747a0815e91d7f95a30.jpg" alt></p>
+<p>如上图所示，事务提交分为四个阶段：<br>1、布局阶段，用于设置视图。这个阶段的主要操作是调用addsubview以及数据填充，该阶段的所有操作都都应该是轻量级的，耗时过长必定会造成丢帧。CPU和I/O操作在该阶段是受限制的。<br>2、绘制阶段，用于绘制视图。重写了drawrect或者存在字符串绘制的时候会在这个阶段进行绘制，该阶段利用Core Graphics进行渲染，因此我们应该最大程度的减少Core Graphics的工作量，以避免在此阶段造成较多的性能损耗。<br>3、准备提交阶段，此阶段会执行Core Animation的一些其他工作。该阶段主要是图片解码和图像转换，一些常见的图片格式的解码过程是在这个阶段进行的，但是往往可能会出现GPU不支持的图像格式，即不支持硬编码，就需要进行转换格式，转换格式又是一个耗时的操作，所以要避免一些非常规的图片格式。<br>4、提交阶段，将layers打包并发送至渲染服务器。看起来打个包提交至渲染服务器这个操作很简单，实际上这是一个递归操作，当一个页面的层级越深越复杂，所带来的资源消耗也是蹭蹭蹭的往上涨，因此尽量保证图层树平整。</p>
+<h2 id="优化方案"><a href="#优化方案" class="headerlink" title="优化方案"></a>优化方案</h2><p>从Core Animation的流程图和Commit Transaction的步骤我们对界面的渲染流程有了大概的一个了解，那么如果碰到一个丢帧的界面该从什么地方开始着手优化呢？</p>
+<p>根据Commit Transaction的四个阶段我们应该遵循这个渲染的顺序寻找性能损耗过高的操作。</p>
+<h3 id="布局阶段"><a href="#布局阶段" class="headerlink" title="布局阶段"></a>布局阶段</h3><p>这个阶段CPU需要计算视图的frame、约束、层级等，这里会有遍历layerSubview和layoutSubLayers的操作，所以这一步我们应该：</p>
+<ol>
+<li>在frame确认不会变动之后再去设置视图的frame，而不是随心所欲的代码块开始的时候设置一遍，然后在代码块结束的时候再设置一遍。</li>
+<li>视图层级尽可能的设计简单一些，嵌套的越深，CPU需要损耗的资源也就越多</li>
+<li>善用Auto Layout，在iOS12之前很多约束变化时都会重新创建一个计算引擎 NSISEnginer 将约束关系重新加进来，然后重新计算。结果就是，涉及到的约束关系变多时，新的计算引擎需要重新计算，最终导致计算量呈指数级增加。而iOS12之后苹果对Auto Layout进行了优化，使其具有与手动设置frame相媲美的高性能，但是这也不是你能随心所欲的使用它的理由，约束多一个，计算就会多一次，所以在使用Auto Layout时请尽可能的减少约束的设置，比如你设置了某控件的top和bottom，那么height就没有必要再去设置一遍了。</li>
+</ol>
+<h3 id="绘制阶段"><a href="#绘制阶段" class="headerlink" title="绘制阶段"></a>绘制阶段</h3><ol>
+<li>如果重写了drawrect方法，请尽可能轻量的去完成重写方法</li>
+<li>如果没有必要，请减少对Core Graphics的操作</li>
+</ol>
+<h3 id="准备提交阶段"><a href="#准备提交阶段" class="headerlink" title="准备提交阶段"></a>准备提交阶段</h3><p>一般这个阶段处理的都是图片解码相关的操作<br>尽量使用32bit格式的图片(前面3个8bit分别代表R/G/B三原色，最后8bit代表透明度)，如果不是32bit的图片则会调度CPU去将图片进行格式转换</p>
+<h3 id="提交阶段"><a href="#提交阶段" class="headerlink" title="提交阶段"></a>提交阶段</h3><p>到这个阶段以及不是我们的能干预的了，因为这个阶段会递归取出层级结构中的视图，所以为了避免该阶段的时间复杂度变高，请尽量保证视图层级的平整。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>尽量保证视图结构的平整，frame确定之后再设置，图片尽量使用32bit格式。满足以上三点基本上就能保证Core Animation Commit Transaction的流畅了。<br>有的同学可能会觉得这些细微的耗时操作可能并不会影响到程序的流畅性，但是要在16.67ms完成这些工作，可能你这一个0.1ms的操作就是压死骆驼的最后一根稻草。</p>
+<h1 id="CPU"><a href="#CPU" class="headerlink" title="CPU"></a>CPU</h1><p>在卡顿的原因中我们了解到当CPU或者GPU超负荷工作时会产生掉帧的情况，而刚刚介绍的Core Animation则是串通CPU与GPU的过程，要在这16.67ms完成一次显示操作仅仅针对Core Animation做优化是远远不够的，一般CPU的工作是造成性能损耗的大头，做好对CPU资源的合理分配则是性能优化的重头戏。</p>
+<h2 id="耗时的操作及优化方案"><a href="#耗时的操作及优化方案" class="headerlink" title="耗时的操作及优化方案"></a>耗时的操作及优化方案</h2><p>通常一个App的数据展示页都是由UITableView/UICollectionView作为载体的，数据从服务端拉取。假设我们的app有一个结构有些复杂的列表页，从服务端获取数据后直接在heightForRow中计算cell的高度，那么卡顿和丢帧就随之而来了。</p>
+<h3 id="创建对象"><a href="#创建对象" class="headerlink" title="创建对象"></a>创建对象</h3><p>通常一个复杂的页面都会有很多的控件对象存在，控件越多，开销就越大。如果使用的是Storyboard创建的视图对象的话所带来的资源消耗会比纯代码创建的高出很多。</p>
+<p>可以适当是使用懒加载，而不是在viewDidLoad时一次性加载出所有的控件，这里有一个典型的例子就是tabbar加载时可以只加载首屏出现的第一个viewController，别的tab可以进行延迟加载。<br>不涉及触摸事件的控件可以使用CALayer创建，相比UIView，它更为轻量，但是AutoLayout只支持对UIView进行操作，这可真是让人烦恼的问题。</p>
+<h3 id="布局计算"><a href="#布局计算" class="headerlink" title="布局计算"></a>布局计算</h3><p>视图布局的计算是App中最为常见的消耗CPU资源的地方，也经常会出现对一个控件进行多次设置frame的操作。<br>我们在从服务端获取了之后先别着急着reloadData，可以开辟一个新的线程进行控件布局计算，布局计算完毕后回到主线程reloadData。<br>下面是YYKit中的一个例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">- (void)loadData&#123;</span><br><span class="line">    // 忽略部分代码</span><br><span class="line">     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^&#123;</span><br><span class="line">            for (int i = 0; i &lt;= 7; i++) &#123;</span><br><span class="line">                NSData *data = [NSData dataNamed:[NSString stringWithFormat:@&quot;weibo_%d.json&quot;,i]];</span><br><span class="line">                WBTimelineItem *item = [WBTimelineItem modelWithJSON:data];</span><br><span class="line">                for (WBStatus *status in item.statuses) &#123;</span><br><span class="line">                    WBStatusLayout *layout = [[WBStatusLayout alloc] initWithStatus:status style:WBLayoutStyleTimeline];</span><br><span class="line">                    [_layouts addObject:layout];</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        </span><br><span class="line">            dispatch_async(dispatch_get_main_queue(), ^&#123;</span><br><span class="line">                self.title = [NSString stringWithFormat:@&quot;Weibo (loaded:%d)&quot;, (int)_layouts.count];</span><br><span class="line">                [indicator removeFromSuperview];</span><br><span class="line">                self.navigationController.view.userInteractionEnabled = YES;</span><br><span class="line">                [_tableView reloadData];</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath &#123;</span><br><span class="line">    return ((WBStatusLayout *)_layouts[indexPath.row]).height;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="图片的解码与转码"><a href="#图片的解码与转码" class="headerlink" title="图片的解码与转码"></a>图片的解码与转码</h3><p>当使用UIImageView设置图片且addSubview操作发生时，这时候才会对图片进行解码，这一步是发生在主线程的，但是可以在子线程中把图片绘制到CGBitmapContext中，然后从Bitmap直接创建图片。</p>
+<p>在Core Animation的流程中我们提到了当GPU有不能识别的图片格式时会让CPU对该图片进行转换的操作，如果从服务端获取的图片并不是32bit的图片则很有可能造成性能损耗。</p>
+<p>从服务端加载加来的图片为二进制数据Data Buffer，需要decode放到image Buffer才能被渲染，而常用的SDWebImage和YYImage等著名开源图片框架都是通过子线程异步解码绘制位图，然后回到主线程进行操作，和预排版有异曲同工之处。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveData:(NSData *)data &#123;</span><br><span class="line">    // 忽略部分代码</span><br><span class="line">    // progressive decode the image in coder queue</span><br><span class="line">        dispatch_async(self.coderQueue, ^&#123;</span><br><span class="line">            @autoreleasepool &#123;</span><br><span class="line">                UIImage *image = [self.progressiveCoder incrementallyDecodedImageWithData:imageData finished:finished];</span><br><span class="line">                if (image) &#123;</span><br><span class="line">                    NSString *key = [[SDWebImageManager sharedManager] cacheKeyForURL:self.request.URL];</span><br><span class="line">                    image = [self scaledImageForKey:key image:image];</span><br><span class="line">                    if (self.shouldDecompressImages) &#123;</span><br><span class="line">                        image = [[SDWebImageCodersManager sharedInstance] decompressedImageWithImage:image data:&amp;imageData options:@&#123;SDWebImageCoderScaleDownLargeImagesKey: @(NO)&#125;];</span><br><span class="line">                    &#125;</span><br><span class="line">                    </span><br><span class="line">                    // We do not keep the progressive decoding image even when `finished`=YES. Because they are for view rendering but not take full function from downloader options. And some coders implementation may not keep consistent between progressive decoding and normal decoding.</span><br><span class="line">                    </span><br><span class="line">                    [self callCompletionBlocksWithImage:image imageData:nil error:nil finished:NO];</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">   // 忽略部分代码</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="iconfont-（只适用于使用了iconfont的App）"><a href="#iconfont-（只适用于使用了iconfont的App）" class="headerlink" title="iconfont （只适用于使用了iconfont的App）"></a>iconfont （只适用于使用了iconfont的App）</h3><p>iconfont是alibaba开源的矢量图标库，提供矢量图标下载、在线存储、格式转换等功能。<br>iconfont可以直接作为一个字体来使用，也能转换为图片进行使用。当作为字体使用时仅仅触发文本渲染，和正常的普通文本没什么实质性的差别，但使用不当也可能造成性能上的损耗。<br>首先，当iconfont转换成图片展示时也会触发图片的解码/转码，而且在调用转成图片的方法时会调用Core Graphics进行图片绘制也会带来一定的开销，而且在之前介绍的Core Animation的流程中也不太建议使用Core Graphics进行图片绘制，所以如果没有特别的必要，请尽量使用文本的方式渲染出你想要使用的iconfont。</p>
+<h3 id="富文本渲染"><a href="#富文本渲染" class="headerlink" title="富文本渲染"></a>富文本渲染</h3><p>富文本渲染是一个痛点，从文本转为富文本就会产生一定的开销，然后进行富文本渲染时又会带来一定的开销。<br>目前比较成熟的解决方案是使用成熟的三方富文本库或者使用Texture进行异步绘制。</p>
+<h2 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a>小结</h2><p>上面所提到的问题及解决方案并不能完全覆盖所有App会遇到的卡顿场景，可能在部分App中出现了多个嵌套循环的代码，或者加载某个三方SDK时会大量占用CPU资源，上述的问题仅仅是做一个抛砖引玉，因为面对问题还得对症下药。</p>
+<h1 id="GPU"><a href="#GPU" class="headerlink" title="GPU"></a>GPU</h1><p><img src="https://raw.githubusercontent.com/sthyuhao/BlogImgZone/master/9b318ecc5396698328276f2eed39b0.jpg" alt><br>由上图所示，一台iOS设备的CPU和GPU由总线进行连接，也可能通过Core Animation、Open GL/Metal进行任务调度。为了让像素能够显示到屏幕上面，有一些工作需要派发给CPU，然后将数据传输给GPU，再对数据进行处理，最后显示到屏幕上面，这个阶段就是由Core Graphics进行数据传输。</p>
+<p>CPU善于计算而现今的GPU被高度优化设计，非常善于图像处理的工作，分工明确，用通俗的话说就是男女搭配干活不累。</p>
+<p>在介绍GPU相关工作之前有一些相关内容需要先行介绍一哈</p>
+<h2 id="像素"><a href="#像素" class="headerlink" title="像素"></a>像素</h2><p>一块屏幕上显示的东西都是由N个像素拼凑而来的，而一个像素都由四个部分组成，那就是三原色(R,G,B)和透明度(A)，其实跟之前介绍的bitmap一致也是32bit。<br>iOS和OS X上面的最通常的文件格式是32 bits-per-pixel (bpp),8 bits-per-component (bpc)，alpha会被预先计算进去。在内存里面像这个样子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"> A   R   G   B     A   R   G   B    A   R   G   B  </span><br><span class="line">| pixel 0         | pixel 1        | pixel 2   </span><br><span class="line">  0   1   2   3    4   5   6   7    8   9   10  11 ...</span><br></pre></td></tr></table></figure>
+<p>这种格式通常被称为ARGB，每个像素占4个字节。一个像素的颜色计算就是通过A的值分别乘上R/G/B的值，例如ARGB的值分别是255、240、99、24,这时将alpha设置为0.33，那么这个色值的ARGB结果就是84、80、33、8。</p>
+<p>还有一种格式是xRGB，看名字也能知道这是个忽略alpha的格式，内存结构如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">  x   R   G   B   x   R   G   B   x   R   G   B  </span><br><span class="line">| pixel 0       | pixel 1       | pixel 2   </span><br><span class="line">  0   1   2   3   4   5   6   7   8   9   10  11 ...</span><br></pre></td></tr></table></figure>
+<p>内存布局和ARGB的一致，那么问题来了，既然alpha不存在为什么还有使用相同的结构？把这个没有字节从内存中干掉不是能节省25%的空间吗？<br>这就牵扯到内存对齐的问题了，CPU在读取内存不对齐的数据时会将内存进行位移计算，而且在处理ARGB的32位时又不需要去计算偏移量。使用这样的内存布局虽然浪费了一些不必要的空间，但是保证了内存的一致性，并且节省了CPU一些不必要的开销。</p>
+<p>Core Graphics处理RGB数据时会将alpha的值放到最后变成RGBA和RGBx(RGB已经预先乘以alpha的格式)</p>
+<h2 id="图片格式"><a href="#图片格式" class="headerlink" title="图片格式"></a>图片格式</h2><p>目前市面流行的主流图片格式为JPEG和PNG，做个简单的介绍</p>
+<h3 id="JPEG"><a href="#JPEG" class="headerlink" title="JPEG"></a>JPEG</h3><p>JPEG数据要变成像素格式得经过一个非常复杂的过程，如果感兴趣的话可以去google一下，反正过程很复杂，然后导致jpeg图片显示到屏幕上会有一点延迟，因为CPU需要解压图片，如果每一个Cell都需要加载JPEG图片的话就会导致滑动不是那么流畅。</p>
+<p>那么为什么还要用这种格式的图呢？因为JPEG使用有损压缩方式去除冗余的图像和彩色数据，在获得极高的压缩率的同时能展现十分丰富生动的图像，即可以用较少的磁盘空间得到较好的图片质量，但这仅仅适用于照片，如果你从网页上截图，JPEG的压缩效率就会变得很低，甚至图片效果发生了改变。</p>
+<h3 id="PNG"><a href="#PNG" class="headerlink" title="PNG"></a>PNG</h3><p>PNG与JPEG相反，采用无损压缩，保存为PNG格式后再打开，所有的像素属于和原始数据完全相同，也正是因为这个限制PNG的压缩效果没有JPEG那么好。</p>
+<p>有弊则有利，PNG在解码效率方面会比JPEG强上许多，而且PNG支持压缩有alpha或是没有alpha通道的RGB像素，这也就是为什么他适合在app中使用的原因。</p>
+<p>还有一点Xcode对PNG格式的图片进行了优化，在对图片压缩时将文件格式转换，在iOS系统读取的时候处理速度会比常规的PNG图片速率更快。Xcode对它们进行了更改，以使iOS使用更有效的解压缩算法，该算法不适用于常规PNG。值得注意的要点是它会更改像素布局。正如我们在 像素 中提到的，有很多方法可以表示RGB数据，如果格式不是iOS图形系统所需要的格式，则需要为每个像素做偏移计算。</p>
+<h2 id="图像合成"><a href="#图像合成" class="headerlink" title="图像合成"></a>图像合成</h2><p>刚刚已经介绍了像素的基本概念，我们的App的界面通常是由不同的位图合成之后再显示到屏幕上，这背后究竟都隐藏着哪些不为人知的操作？<br>假设有两个大小一致且像素对齐的图层分别为图层A和图层B，B覆盖在A上，GPU要计算每个像素合成后的RGB值，这里使用的模式为普通的覆盖模式，那么最后的颜色就是通过下面的公式所计算出来的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">R = S + D * (1 - Sa)</span><br><span class="line"></span><br><span class="line">/* Available in Mac OS X 10.5 &amp; later. R, S, and D are, respectively,</span><br><span class="line">           premultiplied result, source, and destination colors with alpha; Ra,</span><br><span class="line">           Sa, and Da are the alpha components of these colors. </span><br><span class="line">*/</span><br><span class="line"></span><br><span class="line">R : 结果</span><br><span class="line">S : 包含透明度的源色</span><br><span class="line">D : 包含透明度的目标色</span><br><span class="line">Ra, Sa : 结果色透明度和源色透明度</span><br></pre></td></tr></table></figure>
+<p>最后的结果是通过源的颜色（图层B）加目标颜色（图层A） 乘以（1 - 源色的透明度），公式里面所有的颜色就假定已经预先乘以了他们的透明度。</p>
+<p>看起来这个公式并不复杂，但是这只是合成了一个像素而已，GPU需要将两个图层中所有的像素都进行合成，然后你可以打开Xcode中的Debug View Hierarchy看看你的App到底有多少层就知道GPU被摧残的有多惨了。</p>
+<h2 id="透明度"><a href="#透明度" class="headerlink" title="透明度"></a>透明度</h2><p>当顶层的图层完全不透明时，最终的颜色就和顶层的一样，这样可以省去GPU的很多工作，因为GPU直接复制图层的像素来使用而不用去做合成计算。但是GPU可不知道你所做出的图层的像素是不是透明的，因为CALayer是通过咱们程序猿来操作的，如果opaque的值为true，那么CPU则不会做任何合成计算。</p>
+<p>Xcode已经提供了Color Blended Layers功能，在模拟器-Debug-Color Blended Layers。</p>
+<p>如果你确定某个控件是一定不透明的，那么麻烦你给他设置成opaque = true<br>UIView, UILabel, UIImageView, UITextView的默认值是true，但UIButton,UITextField等子类的默认值都是false。</p>
+<h2 id="像素对齐"><a href="#像素对齐" class="headerlink" title="像素对齐"></a>像素对齐</h2><p>上述的理论都是建立在像素完美对齐的情况下，这种情况使用一个相对简单的公式即可完成计算。</p>
+<p>造成像素不对齐的原因：<br>1、缩放：当一个图层放大或者缩小时，图层的像素和屏幕像素排列的就会产生不一致<br>2、边缘不对齐：图层的起始坐标和屏幕的起始坐标不一致</p>
+<p>当像素不对齐时，GPU需要做一些额外的计算将图层上的像素混合起来，而像素对齐时GPU的负担就没有那么重了。</p>
+<p>Xcode提供了Color Misaligned Images功能，当UIView的frame像素不对齐显示紫色；当图片的像素大小与控件的大小不一致而导致需要缩放时，显示黄色。</p>
+<h2 id="离屏渲染"><a href="#离屏渲染" class="headerlink" title="离屏渲染"></a>离屏渲染</h2><p><strong>为什么会有离屏渲染</strong><br>离屏渲染是指GPU在当前屏幕缓冲区以外新开辟一个缓冲区进行渲染。当某些图层不能直接绘制到屏幕上必须进行预合成，这就是为什么会存在离屏渲染的原因。</p>
+<p><strong>离屏渲染为什么会带来性能问题</strong><br>首先离屏渲染会创建新的缓冲区，然后渲染到屏幕缓冲区再将结果渲染回帧缓冲区，这个缓冲区创建和缓冲区切换会带来高昂的代价，如果在16.67ms内没有完成渲染工作，那么就会出现掉帧的现象。</p>
+<p><strong>产生离屏渲染的原因</strong></p>
+<ol>
+<li>cornerRadius和masksToBounds一起使用绘制圆角的时候会触发离屏渲染</li>
+<li>设置了mask</li>
+<li>设置了shadow</li>
+<li>光栅化</li>
+</ol>
+<p><strong>如何优化</strong><br>圆角绘制问题网上有不少的答案，首先需要声明的一点是在iOS 9及更高的系统版本里使用UIImageView且图片为png格式设置圆角已经不会触发离屏渲染了，而其他控件设置圆角依然会触发离屏渲染。其次，如果当一个页面只有零星几个控件需要设置圆角的话也不建议采取优化的方式去做，直接设置圆角问题也不大。</p>
+<p>目前有以下几个优化方案：</p>
+<ol>
+<li>让UI同学直接给出圆角图片，这个方案最省心，但适用场景有限</li>
+<li>使用UIBezierPath和Core Graphics绘制圆角，在上文提到了不建议使用Core Graphics去绘制图形，而且要做圆角优化的地方肯定有大量的控件存在，这样会增大CPU的负荷，可以在CPU空闲的时候在子线程进行预合成。</li>
+<li>使用CAShapeLayer和UIBezierPath绘制圆角</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">func roundCorners(corners: UIRectCorner, radius: CGFloat) &#123;</span><br><span class="line">        let path = UIBezierPath(roundedRect: bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))</span><br><span class="line">        let mask = CAShapeLayer()</span><br><span class="line">        mask.path = path.cgPath</span><br><span class="line">        layer.mask = mask</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>CAShapeLayer使用了硬件加速，绘制同一图形会比用Core Graphics快很多，但设置mask依然会触发离屏渲染。<br>4.通过混合图层，在要添加圆角的视图上再叠加一个部分透明的视图，只对圆角部分进行遮挡，该方法耍了个小聪明，但是上面透明度的问题在这里也就显现的淋漓尽致了。</p>
+<p>以上几种解决方案都尺有所短寸有所长，怎么去优化就按需分配了。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>本文从Core Animation开始切入一直到屏幕显示这个流程分析了可能产生性能问题的原因。问题的出现大多数情况都是CPU负载过高或是GPU使用不当造成的，我们可以使用Xcode提供的Instruments中的各种工具定位性能问题，然后分析出解决问题的办法，平衡CPU的任务，合理使用GPU就能顺利解决性能问题。</p>
+<p><strong>文档参考</strong><br><a href="https://www.objc.io/issues/3-views/moving-pixels-onto-the-screen/" target="_blank" rel="noopener">Getting Pixels onto the Screen</a><br><a href="https://blog.ibireme.com/2015/11/12/smooth_user_interfaces_for_ios/" target="_blank" rel="noopener">iOS 保持界面流畅的技巧</a><br><a href="https://github.com/walkingway/WWDC-2014-Subtitle/blob/master/419%20advanced%20graphics%20and%20animation%20performance%20%5BEnglish%5D.srt" target="_blank" rel="noopener">WWDC2014 419_advanced_graphics_and_animation_performance</a></p>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>发表日期：<a href="http://yoursite.com/2020/04/01/2020-04-01/">April 1st 2020, 8:13:17 pm</a>
+            </p><p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2020/03/26/2020-03-26/" title="iOS性能优化-能源篇">
+                    <div class="prevTitle">iOS性能优化-能源篇</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    <div id="disqus_thread"></div>
+    <script>
+        /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+        
+        var disqus_config = function () {
+        this.page.url = "http://yoursite.com/2020/04/01/2020-04-01/";  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = "iOS性能优化-页面流畅度篇"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        };
+        
+        (function () { // DON'T EDIT BELOW THIS LINE
+            var d = document, s = d.createElement('script');
+            s.src = 'https://sthyuhao.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+    
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:sthyuhao@126.com" class="iconfont-archer email" title="email"></a>
+            
+        
+    
+        
+            
+                <a href="https://github.com/sthyuhao" class="iconfont-archer github" target="_blank" title="github"></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#楔子"><span class="toc-number">1.</span> <span class="toc-text">楔子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#卡顿产生的原因"><span class="toc-number">2.</span> <span class="toc-text">卡顿产生的原因</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Core-Animation"><span class="toc-number">3.</span> <span class="toc-text">Core Animation</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Pipeline"><span class="toc-number">3.1.</span> <span class="toc-text">Pipeline</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Commit-Transaction"><span class="toc-number">3.2.</span> <span class="toc-text">Commit Transaction</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#优化方案"><span class="toc-number">3.3.</span> <span class="toc-text">优化方案</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#布局阶段"><span class="toc-number">3.3.1.</span> <span class="toc-text">布局阶段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#绘制阶段"><span class="toc-number">3.3.2.</span> <span class="toc-text">绘制阶段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#准备提交阶段"><span class="toc-number">3.3.3.</span> <span class="toc-text">准备提交阶段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#提交阶段"><span class="toc-number">3.3.4.</span> <span class="toc-text">提交阶段</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#小结"><span class="toc-number">3.4.</span> <span class="toc-text">小结</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#CPU"><span class="toc-number">4.</span> <span class="toc-text">CPU</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#耗时的操作及优化方案"><span class="toc-number">4.1.</span> <span class="toc-text">耗时的操作及优化方案</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#创建对象"><span class="toc-number">4.1.1.</span> <span class="toc-text">创建对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#布局计算"><span class="toc-number">4.1.2.</span> <span class="toc-text">布局计算</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#图片的解码与转码"><span class="toc-number">4.1.3.</span> <span class="toc-text">图片的解码与转码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#iconfont-（只适用于使用了iconfont的App）"><span class="toc-number">4.1.4.</span> <span class="toc-text">iconfont （只适用于使用了iconfont的App）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#富文本渲染"><span class="toc-number">4.1.5.</span> <span class="toc-text">富文本渲染</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#小结-1"><span class="toc-number">4.2.</span> <span class="toc-text">小结</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#GPU"><span class="toc-number">5.</span> <span class="toc-text">GPU</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#像素"><span class="toc-number">5.1.</span> <span class="toc-text">像素</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#图片格式"><span class="toc-number">5.2.</span> <span class="toc-text">图片格式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#JPEG"><span class="toc-number">5.2.1.</span> <span class="toc-text">JPEG</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PNG"><span class="toc-number">5.2.2.</span> <span class="toc-text">PNG</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#图像合成"><span class="toc-number">5.3.</span> <span class="toc-text">图像合成</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#透明度"><span class="toc-number">5.4.</span> <span class="toc-text">透明度</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#像素对齐"><span class="toc-number">5.5.</span> <span class="toc-text">像素对齐</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#离屏渲染"><span class="toc-number">5.6.</span> <span class="toc-text">离屏渲染</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-number">6.</span> <span class="toc-text">总结</span></a></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 19
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2020 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/01</span><a class="archive-post-title" href="/2020/04/01/2020-04-01/">iOS性能优化-页面流畅度篇</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/26</span><a class="archive-post-title" href="/2020/03/26/2020-03-26/">iOS性能优化-能源篇</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/09</span><a class="archive-post-title" href="/2020/03/09/media/iOS提升效率的几个Tips/">iOS提升效率的几个Tips</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/28</span><a class="archive-post-title" href="/2020/02/28/2020-02-28/">为什么要设计metaclass</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2019 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/05</span><a class="archive-post-title" href="/2019/11/05/2019-11-01/">Autorelease知多少</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/05</span><a class="archive-post-title" href="/2019/08/05/2019-08-05/">深入浅出RunLoop</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/04</span><a class="archive-post-title" href="/2019/07/04/2019-07-04/">GCD线程管理-内核相关</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/27</span><a class="archive-post-title" href="/2019/06/27/2019-06-27/">GCD线程管理从入门到放弃</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/20</span><a class="archive-post-title" href="/2019/03/20/2019-03-20/">扒一扒Category以及关联对象</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/13</span><a class="archive-post-title" href="/2019/02/13/2019-02-13/">年初的一些感慨</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/21</span><a class="archive-post-title" href="/2018/12/21/2018-12-21/">集成Hikari问题汇总</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/12</span><a class="archive-post-title" href="/2018/11/12/2018-11-12/">解析__block</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/01</span><a class="archive-post-title" href="/2018/11/01/2018-10-31/">从源码分析Block的内存管理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/19</span><a class="archive-post-title" href="/2018/10/19/2018-10-19/">weak到底做了些啥？</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/19</span><a class="archive-post-title" href="/2018/07/19/initialize使用不当造成的问题/">initialize使用不当造成的问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/17</span><a class="archive-post-title" href="/2018/04/17/一次逆向mac微信过程记录/">一次逆向mac微信过程记录（自动添加群聊好友）</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/11</span><a class="archive-post-title" href="/2018/04/11/记录一次APP启动优化/">记录一次APP启动优化</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2017 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/03</span><a class="archive-post-title" href="/2017/08/03/Xcode集成O-LLVM/">Xcode集成O-LLVM</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/15</span><a class="archive-post-title" href="/2017/05/15/LLVM与Clang的一些事儿/">LLVM与Clang的一些事儿</a>
+        </li>
+    
+    </ul></div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="block"><span class="iconfont-archer">&#xe606;</span>block</span>
+    
+        <span class="sidebar-tag-name" data-tags="LLVM"><span class="iconfont-archer">&#xe606;</span>LLVM</span>
+    
+        <span class="sidebar-tag-name" data-tags="随笔杂谈"><span class="iconfont-archer">&#xe606;</span>随笔杂谈</span>
+    
+        <span class="sidebar-tag-name" data-tags="O-LLVM"><span class="iconfont-archer">&#xe606;</span>O-LLVM</span>
+    
+        <span class="sidebar-tag-name" data-tags="逆向"><span class="iconfont-archer">&#xe606;</span>逆向</span>
+    
+        <span class="sidebar-tag-name" data-tags="优化"><span class="iconfont-archer">&#xe606;</span>优化</span>
+    
+        <span class="sidebar-tag-name" data-tags="weak"><span class="iconfont-archer">&#xe606;</span>weak</span>
+    
+        <span class="sidebar-tag-name" data-tags="Category"><span class="iconfont-archer">&#xe606;</span>Category</span>
+    
+        <span class="sidebar-tag-name" data-tags="gcd"><span class="iconfont-archer">&#xe606;</span>gcd</span>
+    
+        <span class="sidebar-tag-name" data-tags="RunLoop"><span class="iconfont-archer">&#xe606;</span>RunLoop</span>
+    
+        <span class="sidebar-tag-name" data-tags="AutoreleasePool"><span class="iconfont-archer">&#xe606;</span>AutoreleasePool</span>
+    
+        <span class="sidebar-tag-name" data-tags="runtime"><span class="iconfont-archer">&#xe606;</span>runtime</span>
+    
+        <span class="sidebar-tag-name" data-tags="tips"><span class="iconfont-archer">&#xe606;</span>tips</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br>
+    1、请确保node版本大于6.2<br>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="block"><span class="iconfont-archer">&#xe60a;</span>block</span>
+    
+        <span class="sidebar-category-name" data-categories="混淆"><span class="iconfont-archer">&#xe60a;</span>混淆</span>
+    
+        <span class="sidebar-category-name" data-categories="随笔杂谈"><span class="iconfont-archer">&#xe60a;</span>随笔杂谈</span>
+    
+        <span class="sidebar-category-name" data-categories="LLVM"><span class="iconfont-archer">&#xe60a;</span>LLVM</span>
+    
+        <span class="sidebar-category-name" data-categories="逆向"><span class="iconfont-archer">&#xe60a;</span>逆向</span>
+    
+        <span class="sidebar-category-name" data-categories="优化"><span class="iconfont-archer">&#xe60a;</span>优化</span>
+    
+        <span class="sidebar-category-name" data-categories="内存管理"><span class="iconfont-archer">&#xe60a;</span>内存管理</span>
+    
+        <span class="sidebar-category-name" data-categories="Category"><span class="iconfont-archer">&#xe60a;</span>Category</span>
+    
+        <span class="sidebar-category-name" data-categories="多线程"><span class="iconfont-archer">&#xe60a;</span>多线程</span>
+    
+        <span class="sidebar-category-name" data-categories="RunLoop"><span class="iconfont-archer">&#xe60a;</span>RunLoop</span>
+    
+        <span class="sidebar-category-name" data-categories="runtime"><span class="iconfont-archer">&#xe60a;</span>runtime</span>
+    
+        <span class="sidebar-category-name" data-categories="性能优化"><span class="iconfont-archer">&#xe60a;</span>性能优化</span>
+    
+        <span class="sidebar-category-name" data-categories="调试"><span class="iconfont-archer">&#xe60a;</span>调试</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "余果"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+

@@ -359,6 +359,98 @@ height:50vh;
     
     
     <article class="index-post">
+        <a class="abstract-title" href="/2018/12/21/2018-12-21/">
+            
+                <span>集成Hikari问题汇总</span>
+        </a>
+        <div class="abstract-content">
+            此文记录了编译Hikari混淆器所遇到的问题，希望对有同样问题的你有些帮助，也写给未来遇到问题的自己。
+lldb_codesign no identity found准备在项目中引入Hikari混淆器，Xcode9编译成功后并且能正常运行，但最近苹果修复了Xcode10打包iOS9Crash的问题后我也就把macOS升级到了mojave，Xcode也升级到了10，问题也就来了，之前的Hikari ToolChain也没法用了，怎么办？重装呗！
+重新执行
+1git clone -b release_70 --recursive https://github.com/HikariObfusc...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/12/21</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class="abstract-tags">
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="LLVM">LLVM</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href="/2018/11/12/2018-11-12/">
+            
+                <span>解析__block</span>
+        </a>
+        <div class="abstract-content">
+            __block在什么情况下使用？前一篇文章中我们知道了block拥有捕获变量的能力，但是block却不能改变自动变量的值，每当我们尝试着在block中修改某个自动变量的时候编译器都会抛出一个错误Variable is not assignable (missing __block type specifier),表示该变量在block中不可被赋值，需要使用__block修饰。但是当我们尝试在block中去修改全局变量、静态变量、全局静态变量却是可以通过的，这是为什么？
+block捕获到的自动变量只是该变量的值，而全局变量、静态变量、全局静态变量的值为什么能修改？全局变量和静态全局变量是存...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/11/12</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class="abstract-tags">
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="block">block</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href="/2018/11/01/2018-10-31/">
+            
+                <span>从源码分析Block的内存管理</span>
+        </a>
+        <div class="abstract-content">
+            实际上我不知道怎么去起这个标题，文章大概讲述的是block的类型，block类型的转换以及block的释放，不管了先这样吧
+block的结构123456789101112131415struct Block_layout &#123;    void *isa;    int flags;    int reserved;    void (*invoke)(void *, ...);    struct Block_descriptor *descriptor;    /* Imported variables. */&#125;;struct Block_descriptor &#1...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/11/01</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class="abstract-tags">
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="block">block</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href="/2018/10/19/2018-10-19/">
             
                 <span>weak到底做了些啥？</span>
@@ -876,9 +968,52 @@ run一哈，控制台输出
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 16
+        Total : 19
         </div>
         <!-- search  -->
         
@@ -891,6 +1026,21 @@ run一哈，控制台输出
     
     <div class="archive-year"> 2020 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/01</span><a class="archive-post-title" href="/2020/04/01/2020-04-01/">iOS性能优化-页面流畅度篇</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/26</span><a class="archive-post-title" href="/2020/03/26/2020-03-26/">iOS性能优化-能源篇</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/09</span><a class="archive-post-title" href="/2020/03/09/media/iOS提升效率的几个Tips/">iOS提升效率的几个Tips</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -1028,6 +1178,8 @@ run一哈，控制台输出
     
         <span class="sidebar-tag-name" data-tags="runtime"><span class="iconfont-archer">&#xe606;</span>runtime</span>
     
+        <span class="sidebar-tag-name" data-tags="tips"><span class="iconfont-archer">&#xe606;</span>tips</span>
+    
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
     <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
@@ -1082,6 +1234,10 @@ jsonContent:
         <span class="sidebar-category-name" data-categories="RunLoop"><span class="iconfont-archer">&#xe60a;</span>RunLoop</span>
     
         <span class="sidebar-category-name" data-categories="runtime"><span class="iconfont-archer">&#xe60a;</span>runtime</span>
+    
+        <span class="sidebar-category-name" data-categories="性能优化"><span class="iconfont-archer">&#xe60a;</span>性能优化</span>
+    
+        <span class="sidebar-category-name" data-categories="调试"><span class="iconfont-archer">&#xe60a;</span>调试</span>
     
     </div>
     <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>

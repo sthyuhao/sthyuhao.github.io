@@ -22,7 +22,7 @@
     <meta name="description" content>
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>余果的博客</title>
+    <title>iOS提升效率的几个Tips · 余果的博客</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -203,12 +203,23 @@
 </head>
 
     
+        <body class="post-body">
+    
     
 <header class="header">
 
     <div class="read-progress"></div>
     <div class="header-sidebar-menu">&#xe775;</div>
     <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/">余额不足.</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">iOS提升效率的几个Tips</a>
+            </div>
+    </div>
     
     <a class="home-link" href="/">余额不足.</a>
 </header>
@@ -220,24 +231,74 @@
 
 
 
+
+height:50vh;
 ">
     
     <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
             
     <div class="site-intro-placeholder"></div>
-    <div class="site-intro-img" style="background-image: url(/)"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
     <div class="site-intro-meta">
         <!-- 标题  -->
         <h1 class="intro-title">
             <!-- 主页  -->
+            
+            iOS提升效率的几个Tips
+            <!-- 404 -->
             
         </h1>
         <!-- 副标题 -->
         <p class="intro-subtitle">
             <!-- 主页副标题  -->
             
+            
+            <!-- 404 -->
+            
         </p>
         <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class="post-intro-tags">
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="tips">tips</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">2.2k</span>阅读时长: <span class="post-count reading-time">7 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2020/03/09</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
         
     </div>
 </div>
@@ -338,41 +399,121 @@
 </script>        
         <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
         <div class="container container-unloaded">
-            <main class="main index-page">
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2017/08/03/Xcode集成O-LLVM/">
-            
-                <span>Xcode集成O-LLVM</span>
-        </a>
-        <div class="abstract-content">
-            要在Xcode中使用O-LLVM，必须要编写一个Xcode插件。
-首先
-12345$ cd /Applications/Xcode.app/Contents/PlugIns/Xcode3Core.ideplugin/Contents/SharedSupport/Developer/Library/Xcode/Plug-ins/$ sudo cp -r Clang\ LLVM\ 1.0.xcplugin/ Obfuscator.xcplugin$ cd Obfuscator.xcplugin/Contents/$ sudo plutil -convert xml1 Info.plist$ ...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/08/03</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class="abstract-tags">
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="O-LLVM">O-LLVM</a>
-    
-</div>
-            
-        </div>
+            <main class="main post-page">
+    <article class="article-entry">
+        <h2 id="工具篇"><a href="#工具篇" class="headerlink" title="工具篇"></a>工具篇</h2><h3 id="Crashes"><a href="#Crashes" class="headerlink" title="Crashes"></a>Crashes</h3><p><img src="https://raw.githubusercontent.com/sthyuhao/BlogImgZone/master/cfb1bc73ff50dbaf0f5762cd8ba75e.jpg" alt><br>Xcode内置一个强大无比的Crash收集系统，在Windows-Organizer中可以找到他。<br>这里收集crash的前提是触发crash的手机打开了与App开发者共享功能，这样产生的crash日志才能上传到苹果服务器上。<br>打开的流程为 设置-隐私-分析与改进，这里需要同时打开共享iphone分析和与App开发者共享。<br>Organizer下的Crashes能准确的定位到出问题的代码是哪一行，现在我们在bugly上看问题可能只能定位到哪个类的哪个方法除了问题，但是具体哪一行还需要具体分析，有时候看着该方法都觉得：“这TM哪有问题啊”，就像上图的问题，在bugly报的错是：<br><img src="https://raw.githubusercontent.com/sthyuhao/BlogImgZone/master/2f7f14626f4b5797defc1f8c9990a8.jpg" alt><br>你只能定位到是enterChatRoom中的某个block出问题了，到底除了啥问题，是哪行代码的问题，就需要具体分析了，而Crashes点击代码后面的箭头就能指哪打哪，清晰的定位到问题所在。最终这个问题炸在了云信内部。<br><img src="https://raw.githubusercontent.com/sthyuhao/BlogImgZone/master/49b26fc016273fa93d24de79f7db85.jpg" alt><br>这个urlSession很熟悉吧，bugly上报了他无数次，在bugly中的堆栈是长成这样的：<br><img src="https://raw.githubusercontent.com/sthyuhao/BlogImgZone/master/6008cce601a6e5d757d6b714dde47c.jpg" alt><br>这问题只能让我们觉得这特么是系统的urlsession有问题吗？？哪段网络请求的参数出问题了吗？在没用crashes之前可能会让我们一头雾水，然后再来看看：<br><img src="https://raw.githubusercontent.com/sthyuhao/BlogImgZone/master/a2315a758ec669e6a590f7a624c3da.jpg" alt><br>原来是kingfiser你小子在从中作梗！</p>
+<p>介绍完crashes的优点后在来看看他的缺陷。<br>如果出问题的手机并没有打开和开发者共享数据时，他们出现的crash是不会被收集到这上面来的。但是如果碰到疑难杂症的话还是建议你到这来看看，指不定就有意外收获呢！</p>
+<h3 id="Safari"><a href="#Safari" class="headerlink" title="Safari"></a>Safari</h3><p>Web页面开发调试利器<br>移动端调试 webview<br>单纯在pc端使用手机视图模式，有时并不能保证其在 移动端浏览器/App 有一致的表现，那么要怎么调试呢？</p>
+<p>准备工作<br>需要对Mac/iOS端Safari进行简单的设置</p>
+<p>Mac Safari<br><img src="https://raw.githubusercontent.com/sthyuhao/BlogImgZone/master/fed37e6c5662c1365ca823436fef05.jpg" alt></p>
+<p>iOS Safari<br><img src="https://raw.githubusercontent.com/sthyuhao/BlogImgZone/master/aa0db8e8a13d558c914527cfa586a6.jpg" alt></p>
+<p>开始调试<br>调试分两种情况，web页是跑在 Safari 中还是 App 中的，但无论如何都需要先把手机和电脑连接起来（无线连接跟局域网复杂程度有关，有的时候连不上，在家里还行，在公司就别了）。</p>
+<p>在 Safari 中打开的 web 页<br>比如，在手机端Safari打开 <a href="https://www.baidu.com，会看到Mac端的Safari-开发-手机-多了如下图的选项" target="_blank" rel="noopener">https://www.baidu.com，会看到Mac端的Safari-开发-手机-多了如下图的选项</a></p>
+<p><img src="https://raw.githubusercontent.com/sthyuhao/BlogImgZone/master/cf8131c2f4ce8fba96bc3d9d2e708c.jpg" alt></p>
+<p>打开后可以看到下图弹出一个常见的web检查器工具，大部分操作点我相信你们比我熟悉，在这里就提几个小技巧吧：</p>
+<p>图中红色框的工具，点击后（呈现蓝色状态的瞄准镜），可以直接在手机上点击web元素来触发选中<br>当鼠标滑过web元素（如绿色框的代码）的时候可以看到手机端也会有对应的元素框标识<br>选中的web元素/代码/执行后的代码，后面会有 = $<em> (</em> = 0、1、2…..)，可以直接的控制台使用它<br><img src="https://raw.githubusercontent.com/sthyuhao/BlogImgZone/master/ecfa964149fd1f580527066801c491.jpg" alt></p>
+<p>在 App 中打开的 web 页<br>首先，需要确认你手机的App是通过开发的同学 使用Xcode直接Debug Run出来的（扫码分发下载的不支持），或者模拟器使用拖进去的包也可（但记得给检查一下模拟器的Safari的网页检查器是否打开）</p>
+<p><img src="https://raw.githubusercontent.com/sthyuhao/BlogImgZone/master/36e1fdefee4274e582368080eb9ece.jpg" alt></p>
+<h3 id="Surge"><a href="#Surge" class="headerlink" title="Surge"></a>Surge</h3><p>相信大家都用过Charles，这兄弟在网络方面的调试非常专业，但是作为一个程序猿你怎么可以不会科学上网呢？科学上网需要通过代理来实现，然后Charles抓包同样也需要代理来实现，那这时候问题就来了，我需要同时抓包和科学上网咋整？Charles和科学上网软件同时打开注定会有一方会失败，毕竟一山不容二虎。</p>
+<p>完美的解决方案——Surge<br><img src="https://raw.githubusercontent.com/sthyuhao/BlogImgZone/master/f5a491ad7b74a9bfa96f3c27976a0b.jpg" alt><br><img src="https://raw.githubusercontent.com/sthyuhao/BlogImgZone/master/4e77f67ea866eec5a60a4b9b6194b3.jpg" alt><br><img src="https://raw.githubusercontent.com/sthyuhao/BlogImgZone/master/0d8562e9e48a26d8c911b6e3af2431.jpg" alt></p>
+<p><img src="https://raw.githubusercontent.com/sthyuhao/BlogImgZone/master/a330765064b0c2319aee08a9886f5d.jpg" alt><br>看图也知道这个软件有多强大了吧，而且配置简单。科学上网的话只需要在设置中托管一个链接即可，抓包也仅仅需要生成新证书-将证书安装到系统，而且还很贴心的给iOS开发者提供了给模拟器添加证书的功能。<br>当然他的缺点就是无法将网络断点并修改request和repsonse的内容。</p>
+<h3 id="iOS开发调试神器-FLEX"><a href="#iOS开发调试神器-FLEX" class="headerlink" title="iOS开发调试神器-FLEX"></a>iOS开发调试神器-FLEX</h3><p>首先附上链接<a href="https://github.com/Flipboard/FLEX" target="_blank" rel="noopener">FLEX</a><br>看到这个名字你可能会先想到前端布局方式，其实他的全名叫Flipboard Explorer，是用于iOS开发的一组应用程序内调试和探索的工具。</p>
+<p>之所以称之为神器因为它能：</p>
+<ul>
+<li>检查和修改层次结构中的视图。</li>
+<li>查看任何对象的属性和成员变量。</li>
+<li>动态修改属性和成员变量。</li>
+<li>动态调用实例和类方法。</li>
+<li>查看详细的网络请求历史记录，包括时间，标题和完整响应。</li>
+<li>添加您自己的模拟器键盘快捷方式。</li>
+<li>查看系统日志消息（例如来自NSLog）。</li>
+<li>通过扫描堆访问任何活动对象。</li>
+<li>查看应用程序沙盒中的文件系统。</li>
+<li>浏览文件系统中的SQLite / Realm数据库。</li>
+<li>使用控ctrrl，Shift键和Command键在模拟器中触发3D触摸。</li>
+<li>探索应用程序和链接的系统框架（公共和私有）中的所有类。</li>
+<li>快速访问对象，例如[UIApplication sharedApplication]，Appdelegate，key Window上的根视图控制器等等。</li>
+<li>动态查看和修改NSUserDefaults值。</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/sthyuhao/BlogImgZone/master/43d23d6d1baa1c4be733a3804a1ce1.jpg" alt><br>FLEX可以在开发阶段动态依附在App内。先看看大致的功能<br><img src="https://raw.githubusercontent.com/sthyuhao/BlogImgZone/master/a44384d02010d3278b52fa45e469a0.jpg" alt><br>具体它有多牛逼，实操一把你就知道了！</p>
+<h2 id="代码调试篇"><a href="#代码调试篇" class="headerlink" title="代码调试篇"></a>代码调试篇</h2><h3 id="导航栏的黑框"><a href="#导航栏的黑框" class="headerlink" title="导航栏的黑框"></a>导航栏的黑框</h3><p>如果在键盘弹出的状态下侧滑返回时在导航栏和视图的中间出现了黑框的情况下，如图所示<img src="https://raw.githubusercontent.com/sthyuhao/BlogImgZone/master/7cc15dd04b6c5e39a09d3e74a01d00.jpg" alt></p>
+<p>不用想太多，直接按照以下代码操作执行即可：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">override func viewWillDisappear(_ animated: Bool) &#123;</span><br><span class="line">    super.viewWillDisappear(animated)</span><br><span class="line">    view.endEditing(true)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样侧滑返回就可以干掉出现黑框的问题，而且即使操作了侧滑返回然后又没有执行返回的操作，光标依然会回到上一次执行输入的位置</p>
+<h3 id="利用断点实时插入代码"><a href="#利用断点实时插入代码" class="headerlink" title="利用断点实时插入代码"></a>利用断点实时插入代码</h3><p>除了直接在控制台通过 LLDB 调试器修改 App 状态，我们还可以通过在断点中添加命令来实现同样的功能。而且通过断点来设置调试命令的方式更加方便实用，几乎是实时插入代码的功能。<br>如下图，设置一个断点，通过 Edit Breakpoint… 打开编辑框，你可以将多个不同的调试命令按顺序填入 Action 中，就能实现之前同样的功能。另外你可以勾选 Automatically continue after evaluationg actions ，可以自动继续执行后续代码，而不会停在这一行。</p>
+<p><img src="https://raw.githubusercontent.com/sthyuhao/BlogImgZone/master/8c152fe5af4684e9cb69abae54457d.jpg" alt></p>
+<h3 id="利用-watchpoints-监听变量的变化"><a href="#利用-watchpoints-监听变量的变化" class="headerlink" title="利用 watchpoints 监听变量的变化"></a>利用 watchpoints 监听变量的变化</h3><p>如果我们想监听一个变量发生变化时可以使用 watchpoints 通过监测内存的变化来监听属性的变化。<br>操作也很简单，在你需要监听变量初始化的地方打上断点，然后点击下图红框所示的地方即可监听值的改变。<br><img src="https://raw.githubusercontent.com/sthyuhao/BlogImgZone/master/df452d55bfa09e80dbacadf1cd3ea8.jpg" alt></p>
+<h3 id="查看视图层级"><a href="#查看视图层级" class="headerlink" title="查看视图层级"></a>查看视图层级</h3><p>在日常调试中，使用 LLDB 命令po [self.view recursiveDescription]命令来输出页面视图结构是非常方便的，然而我们在 Swift 调用栈中使用这个命令的时候将打印以下错误：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">po self.view.recursiveDescription()</span><br><span class="line">error: &lt;EXPR&gt;:3:6: error: value of type &apos;UIView?&apos; has no member &apos;recursiveDescription&apos;</span><br><span class="line">self.view.recursiveDescription()</span><br><span class="line">~~~~~^~~~ ~~~~~~~~~~~~~~~~~~~~</span><br></pre></td></tr></table></figure>
+<p>因为调用的<code>recursiveDescription</code>为私有方法。</p>
+<p>其实我们可以通过“expression -l objc -O – ”命令来使用 Obj-C 代码来输出我们想要的视图结构，记得self.view两边一定要加上 <code>符号。
+expression -l objc -O -- [</code>self.view` recursiveDescription]<br><img src="https://raw.githubusercontent.com/sthyuhao/BlogImgZone/master/1d3523a712ada3a63ac434886f3b24.jpg" alt></p>
+<p>当然这条指令太长了，可以利用别名<code>command alias &lt;alias name&gt; expression -l objc -O —-</code><br>然后使用别名直接调用即可<br><img src="https://raw.githubusercontent.com/sthyuhao/BlogImgZone/master/1d3d81e536a62b32b1a372aa5f5a7d.jpg" alt></p>
+<h3 id="利用-“expression-CATransaction-flush-”-命令刷新页面"><a href="#利用-“expression-CATransaction-flush-”-命令刷新页面" class="headerlink" title="利用 “expression CATransaction.flush()” 命令刷新页面"></a>利用 “expression CATransaction.flush()” 命令刷新页面</h3><p>你可以在控制台通过 LLDB 调试器中改变 UI 的坐标值，但你并不能立即看到页面有任何改变。事实上你确实修改了它的值，你只是需要使用“expression CATransaction.flush()”来刷新一下你的页面。<br>配合修改 UI 坐标值的命令一起使用，你能看到你的模拟器正在发生令人振奋的一幕。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 修改坐标点</span><br><span class="line">po unsafeBitCast(0x7fe439d13160, UILabel.self).center.y = 300</span><br><span class="line">// 刷新页面</span><br><span class="line">expression CATransaction.flush()</span><br></pre></td></tr></table></figure>
+
     </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>发表日期：<a href="http://yoursite.com/2020/03/09/media/iOS提升效率的几个Tips/">March 9th 2020, 10:13:17 am</a>
+            </p><p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
     
     <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2020/03/26/2020-03-26/" title="iOS性能优化-能源篇">
+                    <div class="nextTitle">iOS性能优化-能源篇</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2020/02/28/2020-02-28/" title="为什么要设计metaclass">
+                    <div class="prevTitle">为什么要设计metaclass</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
     
+    <div id="disqus_thread"></div>
+    <script>
+        /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+        
+        var disqus_config = function () {
+        this.page.url = "http://yoursite.com/2020/03/09/media/iOS提升效率的几个Tips/";  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = "iOS提升效率的几个Tips"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        };
+        
+        (function () { // DON'T EDIT BELOW THIS LINE
+            var d = document, s = d.createElement('script');
+            s.src = 'https://sthyuhao.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+    
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
 </main>
             <!-- profile -->
             
@@ -450,6 +591,24 @@
 </footer>
     </div>
     <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#工具篇"><span class="toc-number">1.</span> <span class="toc-text">工具篇</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Crashes"><span class="toc-number">1.1.</span> <span class="toc-text">Crashes</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Safari"><span class="toc-number">1.2.</span> <span class="toc-text">Safari</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Surge"><span class="toc-number">1.3.</span> <span class="toc-text">Surge</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#iOS开发调试神器-FLEX"><span class="toc-number">1.4.</span> <span class="toc-text">iOS开发调试神器-FLEX</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#代码调试篇"><span class="toc-number">2.</span> <span class="toc-text">代码调试篇</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#导航栏的黑框"><span class="toc-number">2.1.</span> <span class="toc-text">导航栏的黑框</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#利用断点实时插入代码"><span class="toc-number">2.2.</span> <span class="toc-text">利用断点实时插入代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#利用-watchpoints-监听变量的变化"><span class="toc-number">2.3.</span> <span class="toc-text">利用 watchpoints 监听变量的变化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查看视图层级"><span class="toc-number">2.4.</span> <span class="toc-text">查看视图层级</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#利用-“expression-CATransaction-flush-”-命令刷新页面"><span class="toc-number">2.5.</span> <span class="toc-text">利用 “expression CATransaction.flush()” 命令刷新页面</span></a></li></ol></li></ol>
+    </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
     <div class="sidebar sidebar-hide">
@@ -942,6 +1101,8 @@ jsonContent:
     
     </div>
     <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
      
     </body>
 </html>

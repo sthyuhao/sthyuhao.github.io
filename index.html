@@ -359,6 +359,100 @@ height:50vh;
     
     
     <article class="index-post">
+        <a class="abstract-title" href="/2020/04/01/2020-04-01/">
+            
+                <span>iOS性能优化-页面流畅度篇</span>
+        </a>
+        <div class="abstract-content">
+            楔子其实市面上有很多关于卡顿优化相关的文章，从入行没多久就接触到了YY大神的iOS 保持界面流畅的技巧延伸到现在百花齐放的各路优化技巧，但是万变不离其宗的原理还是减少CPU和GPU的工作量，让这二位兄弟不用处理高强度的任务。
+卡顿产生的原因
+当主线程启动时会先有CPU处理好需要显示的数据，然后交付给GPU，然后GPU通过合成、渲染等操作将处理结果提交到帧缓存中，当垂直同步信号到达时将处理结果显示到屏幕上。每个垂直同步信号到达的间隔约为16.67ms(1秒60帧)，如果在CPU和GPU在垂直同步信号到达直接就交付处理结果到帧缓存中则不会产生卡顿，而当CPU和GPU两者处理时间大于16.67...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/04/01</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class="abstract-tags">
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="优化">优化</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href="/2020/03/26/2020-03-26/">
+            
+                <span>iOS性能优化-能源篇</span>
+        </a>
+        <div class="abstract-content">
+            
+WWDC2017有一篇关于节省电池能源的分享，视频中表示图中的四兄弟就是吃掉大量电池能源的罪魁祸首：1、CPU的处理工作2、网络3、定位4、图形处理
+网络的消耗
+数据加载现今市面上的App利用网络无非是为了加载数据、上传图片/文件以及上报用户分析数据（埋点）。早些年可能有部分App加载数据可能是用定时器操作，经过固定的一段时间就拉取一次数据。这样的操作方式需要CPU执行一个定时器，然后每一段时间就需要加载一次网络请求，这样的开销可想而知。
+
+上传图片/文件可能目前有些App的操作方式是拿到上传任务就马上开始进行图片/文件上传，如果失败或者超时了就进行重试，这样的操作方式下大概的能源消耗...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/03/26</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class="abstract-tags">
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="优化">优化</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href="/2020/03/09/media/iOS提升效率的几个Tips/">
+            
+                <span>iOS提升效率的几个Tips</span>
+        </a>
+        <div class="abstract-content">
+            工具篇CrashesXcode内置一个强大无比的Crash收集系统，在Windows-Organizer中可以找到他。这里收集crash的前提是触发crash的手机打开了与App开发者共享功能，这样产生的crash日志才能上传到苹果服务器上。打开的流程为 设置-隐私-分析与改进，这里需要同时打开共享iphone分析和与App开发者共享。Organizer下的Crashes能准确的定位到出问题的代码是哪一行，现在我们在bugly上看问题可能只能定位到哪个类的哪个方法除了问题，但是具体哪一行还需要具体分析，有时候看着该方法都觉得：“这TM哪有问题啊”，就像上图的问题，在bugly报的错是：你...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/03/09</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class="abstract-tags">
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="tips">tips</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href="/2020/02/28/2020-02-28/">
             
                 <span>为什么要设计metaclass</span>
@@ -562,98 +656,6 @@ likely(...
             <div class="abstract-tags">
     
         <a class="post-tag" href="javascript:void(0);" data-tags="随笔杂谈">随笔杂谈</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2018/12/21/2018-12-21/">
-            
-                <span>集成Hikari问题汇总</span>
-        </a>
-        <div class="abstract-content">
-            此文记录了编译Hikari混淆器所遇到的问题，希望对有同样问题的你有些帮助，也写给未来遇到问题的自己。
-lldb_codesign no identity found准备在项目中引入Hikari混淆器，Xcode9编译成功后并且能正常运行，但最近苹果修复了Xcode10打包iOS9Crash的问题后我也就把macOS升级到了mojave，Xcode也升级到了10，问题也就来了，之前的Hikari ToolChain也没法用了，怎么办？重装呗！
-重新执行
-1git clone -b release_70 --recursive https://github.com/HikariObfusc...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/12/21</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class="abstract-tags">
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="LLVM">LLVM</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2018/11/12/2018-11-12/">
-            
-                <span>解析__block</span>
-        </a>
-        <div class="abstract-content">
-            __block在什么情况下使用？前一篇文章中我们知道了block拥有捕获变量的能力，但是block却不能改变自动变量的值，每当我们尝试着在block中修改某个自动变量的时候编译器都会抛出一个错误Variable is not assignable (missing __block type specifier),表示该变量在block中不可被赋值，需要使用__block修饰。但是当我们尝试在block中去修改全局变量、静态变量、全局静态变量却是可以通过的，这是为什么？
-block捕获到的自动变量只是该变量的值，而全局变量、静态变量、全局静态变量的值为什么能修改？全局变量和静态全局变量是存...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/11/12</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class="abstract-tags">
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="block">block</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2018/11/01/2018-10-31/">
-            
-                <span>从源码分析Block的内存管理</span>
-        </a>
-        <div class="abstract-content">
-            实际上我不知道怎么去起这个标题，文章大概讲述的是block的类型，block类型的转换以及block的释放，不管了先这样吧
-block的结构123456789101112131415struct Block_layout &#123;    void *isa;    int flags;    int reserved;    void (*invoke)(void *, ...);    struct Block_descriptor *descriptor;    /* Imported variables. */&#125;;struct Block_descriptor &#1...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/11/01</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class="abstract-tags">
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="block">block</a>
     
 </div>
             
@@ -999,9 +1001,52 @@ block的结构123456789101112131415struct Block_layout &#123;    void *isa;    i
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 16
+        Total : 19
         </div>
         <!-- search  -->
         
@@ -1014,6 +1059,21 @@ block的结构123456789101112131415struct Block_layout &#123;    void *isa;    i
     
     <div class="archive-year"> 2020 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/01</span><a class="archive-post-title" href="/2020/04/01/2020-04-01/">iOS性能优化-页面流畅度篇</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/26</span><a class="archive-post-title" href="/2020/03/26/2020-03-26/">iOS性能优化-能源篇</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/09</span><a class="archive-post-title" href="/2020/03/09/media/iOS提升效率的几个Tips/">iOS提升效率的几个Tips</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -1151,6 +1211,8 @@ block的结构123456789101112131415struct Block_layout &#123;    void *isa;    i
     
         <span class="sidebar-tag-name" data-tags="runtime"><span class="iconfont-archer">&#xe606;</span>runtime</span>
     
+        <span class="sidebar-tag-name" data-tags="tips"><span class="iconfont-archer">&#xe606;</span>tips</span>
+    
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
     <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
@@ -1205,6 +1267,10 @@ jsonContent:
         <span class="sidebar-category-name" data-categories="RunLoop"><span class="iconfont-archer">&#xe60a;</span>RunLoop</span>
     
         <span class="sidebar-category-name" data-categories="runtime"><span class="iconfont-archer">&#xe60a;</span>runtime</span>
+    
+        <span class="sidebar-category-name" data-categories="性能优化"><span class="iconfont-archer">&#xe60a;</span>性能优化</span>
+    
+        <span class="sidebar-category-name" data-categories="调试"><span class="iconfont-archer">&#xe60a;</span>调试</span>
     
     </div>
     <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
